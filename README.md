@@ -7,14 +7,14 @@ run rake db:seed and it will generate 1 test run and 10 test results with pass/f
 ### Current models
 
 TestRun
- --build_id (string)
- --test_results (TestResult)
+--build_id (string)
+--test_results (TestResult)
 
- Test
- --class_name (string)
- --name (string)
- --log (text)
+Test
+--class_name (string)
+--name (string)
+--log (text)
 
- TestResult
- --test (Test)
- --result (string)
+TestResult
+--test (Test)
+--result (string)
