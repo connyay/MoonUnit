@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  test_result_id: 
+  build_id: MyString
+
+two:
+  test_result_id: 
+  build_id: MyString
