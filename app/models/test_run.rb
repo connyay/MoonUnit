@@ -1,3 +1,4 @@
 class TestRun < ActiveRecord::Base
-  has_many :test_results
+  validates_presence_of :build_id
+  has_many :test_results, dependent: :destroy
 end
