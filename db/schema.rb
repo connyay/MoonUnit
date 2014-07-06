@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 20140704024301) do
     t.integer  "test_id"
     t.integer  "test_run_id"
     t.string   "result"
+    t.float    "time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -33,6 +34,7 @@ ActiveRecord::Schema.define(version: 20140704024301) do
   create_table "tests", force: true do |t|
     t.string   "class_name"
     t.string   "name"
+    t.string   "package"
     t.text     "log"
     t.datetime "created_at"
     t.datetime "updated_at"

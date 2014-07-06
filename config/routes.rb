@@ -53,4 +53,8 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  post '/import' => 'import#create'
+  resources :test_runs
+  root 'test_runs#index'
 end
