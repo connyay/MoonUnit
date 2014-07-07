@@ -1,0 +1,5 @@
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("components/UI/loading.html","<div class=\"text-center m\">\n    <i class=\"fa fa-spinner fa-3x fa-spin\"></i>\n</div>");
+$templateCache.put("components/UI/side-nav.html","<div class=\"navbar-default navbar-static-side\" role=\"navigation\">\n    <div class=\"sidebar-collapse\">\n        <ul class=\"nav\" id=\"side-menu\">\n            <li ng-repeat=\"item in navItems\">\n                <a href=\"#{{item.route}}\" title=\"{{item.title}}\"><i class=\"fa fa-{{item.icon}}\"></i> {{item.title}}</a>\n            </li>\n        </ul>\n    </div>\n</div>");
+$templateCache.put("components/Builds/templates/builds.html","<h1 class=\"page-header\">Builds</h2>");
+$templateCache.put("components/Dashboard/templates/dashboard.html","<h1 class=\"page-header\">Dashboard</h2>");
+$templateCache.put("components/TestResults/templates/test-results.html","<h1 class=\"page-header\">Test Results</h2>");}]);
