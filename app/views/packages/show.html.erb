@@ -1,0 +1,10 @@
+<% @test_results.each do |test_result| %>
+	<% test = test_result.test %>
+	<% if test_result.result == "pass" %>
+		<font color="green">
+	<% else %>
+		<font color="red">
+	<% end %>
+
+	<%= "#{test.package}.#{test.class_name}.#{test.name}" %></font><br>
+<% end %>

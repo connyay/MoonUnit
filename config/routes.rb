@@ -55,6 +55,9 @@ Rails.application.routes.draw do
   #   end
 
   post '/import' => 'import#create'
-  resources :test_runs
+  resources :test_runs do
+    resources :packages, :constraints => { :id => /[\w+\.]+/ }
+
+  end
   root 'test_runs#index'
 end
