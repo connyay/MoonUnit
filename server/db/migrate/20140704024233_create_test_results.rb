@@ -4,6 +4,7 @@ class CreateTestResults < ActiveRecord::Migration
       t.references :test, index: true
       t.references :test_run, index: true
       t.string :result
+      t.string :log
       t.float :time
       t.timestamps
     end

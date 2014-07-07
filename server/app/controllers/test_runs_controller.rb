@@ -9,7 +9,13 @@ class TestRunsController < ApplicationController
 
 		respond_to do |format|
 			format.html
-			format.json{render :json => @test_run.to_json(:include => :test_results), :status => :ok}
+			format.json{render :json => @test_run, :status => :ok}
 		end
+	end
+
+	private
+	 
+	def default_serializer_options
+		{root: false}
 	end
 end

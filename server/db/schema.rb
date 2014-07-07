@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20140704024301) do
     t.integer  "test_run_id"
     t.string   "result"
     t.float    "time"
+    t.string   "log"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
