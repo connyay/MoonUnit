@@ -5,7 +5,8 @@ class TestRunsController < ApplicationController
 	end
 
 	def show
-		@test_run = TestRun.find(params[:id])
+		#Category.includes(posts: [{ comments: :guest }, :tags]).find(1)
+		@test_run = TestRun.includes(test_results: [:test]).find(params[:id])
 
 		respond_to do |format|
 			format.html
@@ -14,7 +15,7 @@ class TestRunsController < ApplicationController
 	end
 
 	private
-	 
+
 	def default_serializer_options
 		{root: false}
 	end
