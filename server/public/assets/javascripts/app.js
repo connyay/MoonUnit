@@ -39,16 +39,12 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.dashboard.controllers', [])
-        .controller('DashboardCtrl', function($scope) {});
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('moonunit.testResults.controllers', [])
-        .controller('ListTestResultsCtrl', function($scope) {
-
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data'])
+        .controller('ListTestResultsCtrl', function($scope, TestResults) {
+            TestResults.get({}, function(data) {
+                $scope.buildID = data.build_id;
+                $scope.results = data.test_results;
+            });
         });
 
 })();
@@ -63,6 +59,37 @@
                     controller: 'ListTestResultsCtrl'
                 });
         });
+
+})();
+(function() {
+    'use strict';
+    angular.module('moonunit.testResults.data', ['ngResource'])
+        .factory('TestResults', ['$resource',
+            function($resource) {
+                return $resource('/test_runs', {
+                    id: '@id'
+                }, {
+                    'query': {
+                        method: 'GET',
+                        isArray: true,
+                        transformResponse: function(data) {
+                            debugger;
+                        }
+                    },
+                    'get': {
+                        url: '/test_runs/1.json',
+                        method: 'GET'
+                    },
+                });
+            }
+        ]);
+
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.dashboard.controllers', [])
+        .controller('DashboardCtrl', function($scope) {});
 
 })();
 (function() {

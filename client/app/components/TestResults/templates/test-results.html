@@ -1,1 +1,12 @@
-<h1 class="page-header">Test Results</h2>
+<h1 class="page-header">Test Results
+    <small>{{buildID}}</small>
+</h1>
+
+
+<ul>
+    <li ng-repeat="result in results">
+        <p>Package: {{result.package}}</p>
+        <p>Class Name: {{result.class_name}}</p>
+        <p>Result: {{result.result}}</p>
+    </li>
+</ul>
