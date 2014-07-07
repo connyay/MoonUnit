@@ -10,7 +10,10 @@ class ImportController < ApplicationController
 		doc = Nokogiri::XML(request.body.read)
 		#try to get the build id from this property 
 		build = doc.css("property[name='latestGoodBuild']")[0][:value]
-		test_run = TestRun.create(:build_id => build)
+
+		#Use existing or create new build
+		test_run = TestRun.find_by(:build_id => build)
+		test_run = TestRun.create(:build_id => build) if not test_run
 
 		tests = doc.css("testcase")
 		tests.each do |test|
