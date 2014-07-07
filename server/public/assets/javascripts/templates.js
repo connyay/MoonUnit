@@ -1,0 +1,1 @@
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("components/Dashboard/templates/dashboard.html","<h1>Hello Rails</h2>");}]);

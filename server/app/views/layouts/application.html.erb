@@ -2,13 +2,16 @@
 <html>
 <head>
   <title>MoonUnit</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body ng-app="moonunit">
 
 <%= yield %>
 
+<section ng-view></section>
+
+<script src="assets/javascripts/lib.js"></script>
+<script src="assets/javascripts/templates.js"></script>
+<script src="assets/javascripts/app.js"></script>
 </body>
 </html>
