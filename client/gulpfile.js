@@ -32,6 +32,7 @@ gulp.task('vendorJS', function() {
         './bower_components/angular-route/angular-route.js',
         './bower_components/angular-resource/angular-resource.js',
         './bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+        './bower_components/ng-grid/build/ng-grid.js'
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())

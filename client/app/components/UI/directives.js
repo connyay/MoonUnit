@@ -2,11 +2,11 @@
     'use strict';
 
     angular.module('moonunit.ui.directives', [])
-        .directive('sideNav', function() {
+        .directive('mainNav', function() {
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: 'components/UI/side-nav.html',
+                templateUrl: 'components/UI/main-nav.html',
                 controller: function($scope) {
                     $scope.navItems = [{
                         title: 'Dashboard',

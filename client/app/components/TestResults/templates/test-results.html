@@ -2,29 +2,5 @@
     <small>{{buildID}}</small>
 </h1>
 
-<form class="form-inline pull-right" name="form" role="form">
-    <div class="form-group">
-        <input type="text" class="form-control" ng-model="filterText" placeholder="Filter">
-    </div>
-</form>
-<table class="table table-hover tabled-fixed">
-    <thead>
-        <tr>
-            <th>Package</th>
-            <th>Class Name</th>
-            <th>Test Name</th>
-            <th class="col-lg-1">Result</th>
-        </tr>
-    </thead>
-    <tbody ng-if="!loading" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
-        <tr ng-repeat="result in results | filter:filterText | limitTo: config.limitAmount">
-            <td>{{result.package}}</td>
-            <td>{{result.class_name}}</td>
-            <td class="col-lg-1">{{result.name}}</td>
-            <td>
-                <span class="label" ng-class="{'label-success': result.result === 'pass', 'label-danger': result.result !== 'pass'}">{{result.result}}</span>
-            </td>
-        </tr>
-    </tbody>
-</table>
 <loading ng-if="loading"></loading>
+<div class="gridStyle" ng-grid="gridOptions" ng-if="!loading"></div>
