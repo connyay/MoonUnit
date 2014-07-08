@@ -33,11 +33,7 @@ class ImportController < ApplicationController
 		end
 		#End XML parsing
 
-		
-
-		respond_to do |format|
-			format.json{render :json => {:message => "sucess"}, :status => :created}
-		end
+		render :json => {:message => "sucess"}, :status => :created
 	end
 
 	private 
@@ -49,9 +45,7 @@ class ImportController < ApplicationController
 		end
 
 		if test.errors.any?
-			respond_to do |format|
-				format.json{render :json =>test.errors.messages, :status => :bad_request}
-			end
+			render :json =>test.errors.messages, :status => :bad_request
 		end
 
 		return test

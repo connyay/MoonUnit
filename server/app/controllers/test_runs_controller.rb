@@ -7,11 +7,8 @@ class TestRunsController < ApplicationController
 	def show
 		#Category.includes(posts: [{ comments: :guest }, :tags]).find(1)
 		@test_run = TestRun.includes(test_results: [:test]).find(params[:id])
-
-		respond_to do |format|
-			format.html
-			format.json{render :json => @test_run, :status => :ok}
-		end
+		render :json => @test_run, :status => :ok
+		
 	end
 
 	private
