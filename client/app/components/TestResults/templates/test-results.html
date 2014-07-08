@@ -1,1 +1,6 @@
-<h1 class="page-header">Test Results</h2>
+<h1 class="page-header">Test Results
+    <small>{{buildID}}</small>
+</h1>
+
+<loading ng-if="loading"></loading>
+<div class="gridStyle" ng-grid="gridOptions" ng-if="!loading"></div>

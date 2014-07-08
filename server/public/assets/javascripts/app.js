@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'sideNavDirective'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/dashboard', {
@@ -46,8 +46,51 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults.controllers', [])
-        .controller('ListTestResultsCtrl', function($scope) {
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'infinite-scroll', 'ngGrid'])
+        .controller('ListTestResultsCtrl', function($scope, TestResults) {
+            $scope.loading = true;
+            $scope.config = {};
+            $scope.data = [];
+            TestResults.get({}, function(data) {
+                $scope.buildID = data.build_id;
+                //$scope.results = data.test_results;
+                $scope.data = data.test_results;
+                $scope.config.limitAmount = 20;
+                $scope.loading = false;
+            });
+
+            $scope.addMoreItems = function() {
+                $scope.config.limitAmount += 20;
+            };
+
+            $scope.gridOptions = {
+                data: 'data',
+                showGroupPanel: true,
+                columnDefs: [{
+                    field: 'package',
+                    displayName: 'Package',
+                    width: '**',
+                }, {
+                    field: 'class_name',
+                    displayName: 'Class Name',
+                    width: '**',
+                }, {
+                    field: 'name',
+                    displayName: 'Test Name',
+                    cellTemplate: '<div class="ngCellText colt{{$index}}" title="{{ row.entity[col.field]}}">{{ row.entity[col.field]}}</div>',
+                    width: '**',
+                }, {
+                    field: 'time',
+                    displayName: 'Time',
+                    cellTemplate: '<div class="ngCellText colt{{$index}}">{{ row.entity[col.field] | number:2}} sec</div>',
+                }, {
+                    field: 'result',
+                    displayName: 'Result',
+                    cellTemplate: '<div class="ngCellText text-center colt{{$index}}"><span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] !== \'pass\'}">{{ row.entity[col.field] === \'pass\' ? \'Pass\' : \'Fail\'}}</span></div>'
+                }],
+                showFilter: true,
+                groups: ['package']
+            };
 
         });
 
@@ -67,47 +110,56 @@
 })();
 (function() {
     'use strict';
+    angular.module('moonunit.testResults.data', ['ngResource'])
+        .factory('TestResults', ['$resource',
+            function($resource) {
+                return $resource('/test_runs', {
+                    id: '@id'
+                }, {
+                    'query': {
+                        method: 'GET',
+                        isArray: true
+                    },
+                    'get': {
+                        url: '/test_runs/1.json',
+                        method: 'GET',
+                        cache: true
+                    },
+                });
+            }
+        ]);
 
-    angular.module('loadingDirective', [])
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.ui.directives', [])
+        .directive('mainNav', function() {
+            return {
+                restrict: 'E',
+                replace: true,
+                templateUrl: 'components/UI/main-nav.html',
+                controller: function($scope) {
+                    $scope.navItems = [{
+                        title: 'Dashboard',
+                        route: 'dashboard',
+                        icon: 'dashboard',
+                    }, {
+                        title: 'Builds',
+                        icon: 'shield',
+                        route: 'builds'
+                    }, {
+                        title: 'Test Results',
+                        icon: 'gavel',
+                        route: 'test-results'
+                    }];
+                }
+            };
+        })
         .directive('loading', function() {
             return {
                 restrict: 'E',
                 templateUrl: 'components/UI/loading.html'
             };
         });
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('sideNavDirective', [])
-        .directive('sideNav', function() {
-            return {
-                restrict: 'E',
-                replace: true,
-                templateUrl: 'components/UI/side-nav.html',
-                controller: 'NavCtrl'
-            };
-        })
-        .controller('NavCtrl', ['$scope', '$location',
-            function($scope, $location) {
-                // Items to show in the side navigation.
-                // Object with a title and route property. If no route
-                // is provided the lowercase'd title will be used
-                $scope.navItems = [{
-                    title: 'Dashboard',
-                    route: 'dashboard',
-                    icon: 'dashboard',
-                }, {
-                    title: 'Builds',
-                    icon: 'shield',
-                    route: 'builds'
-                }, {
-                    title: 'Test Results',
-                    icon: 'gavel',
-                    route: 'test-results'
-                }];
-            }
-        ]);
-
 })();
