@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'loadingDirective', 'sideNavDirective'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/dashboard', {
@@ -39,17 +39,27 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data'])
-        .controller('ListTestResultsCtrl', function($scope, TestResults, $timeout) {
+    angular.module('moonunit.dashboard.controllers', [])
+        .controller('DashboardCtrl', function($scope) {});
+
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'infinite-scroll'])
+        .controller('ListTestResultsCtrl', function($scope, TestResults) {
             $scope.loading = true;
-            var getData = function() {
-                TestResults.get({}, function(data) {
-                    $scope.buildID = data.build_id;
-                    $scope.results = data.test_results;
-                    $scope.loading = false;
-                });
+            $scope.config = {};
+            TestResults.get({}, function(data) {
+                $scope.buildID = data.build_id;
+                $scope.results = data.test_results;
+                $scope.config.limitAmount = 20;
+                $scope.loading = false;
+            });
+
+            $scope.addMoreItems = function() {
+                $scope.config.limitAmount += 20;
             };
-            $timeout(getData, 0);
 
         });
 
@@ -92,53 +102,33 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.dashboard.controllers', [])
-        .controller('DashboardCtrl', function($scope) {});
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('loadingDirective', [])
+    angular.module('moonunit.ui.directives', [])
+        .directive('sideNav', function() {
+            return {
+                restrict: 'E',
+                replace: true,
+                templateUrl: 'components/UI/side-nav.html',
+                controller: function($scope) {
+                    $scope.navItems = [{
+                        title: 'Dashboard',
+                        route: 'dashboard',
+                        icon: 'dashboard',
+                    }, {
+                        title: 'Builds',
+                        icon: 'shield',
+                        route: 'builds'
+                    }, {
+                        title: 'Test Results',
+                        icon: 'gavel',
+                        route: 'test-results'
+                    }];
+                }
+            };
+        })
         .directive('loading', function() {
             return {
                 restrict: 'E',
                 templateUrl: 'components/UI/loading.html'
             };
         });
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('sideNavDirective', [])
-        .directive('sideNav', function() {
-            return {
-                restrict: 'E',
-                replace: true,
-                templateUrl: 'components/UI/side-nav.html',
-                controller: 'NavCtrl'
-            };
-        })
-        .controller('NavCtrl', ['$scope', '$location',
-            function($scope, $location) {
-                // Items to show in the side navigation.
-                // Object with a title and route property. If no route
-                // is provided the lowercase'd title will be used
-                $scope.navItems = [{
-                    title: 'Dashboard',
-                    route: 'dashboard',
-                    icon: 'dashboard',
-                }, {
-                    title: 'Builds',
-                    icon: 'shield',
-                    route: 'builds'
-                }, {
-                    title: 'Test Results',
-                    icon: 'gavel',
-                    route: 'test-results'
-                }];
-            }
-        ]);
-
 })();

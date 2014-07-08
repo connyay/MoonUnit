@@ -16,8 +16,8 @@
             <th class="col-lg-1">Result</th>
         </tr>
     </thead>
-    <tbody ng-if="!loading">
-        <tr ng-repeat="result in results | filter:filterText">
+    <tbody ng-if="!loading" infinite-scroll="addMoreItems()" infinite-scroll-distance="1">
+        <tr ng-repeat="result in results | filter:filterText | limitTo: config.limitAmount">
             <td>{{result.package}}</td>
             <td>{{result.class_name}}</td>
             <td class="col-lg-1">{{result.name}}</td>

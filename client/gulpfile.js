@@ -26,9 +26,12 @@ gulp.task('templates', function() {
 
 gulp.task('vendorJS', function() {
     //concatenate vendor JS files
-    gulp.src(['./bower_components/angular/angular.js',
+    gulp.src([
+        './bower_components/jquery/jquery.js',
+        './bower_components/angular/angular.js',
         './bower_components/angular-route/angular-route.js',
-        './bower_components/angular-resource/angular-resource.js'
+        './bower_components/angular-resource/angular-resource.js',
+        './bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())

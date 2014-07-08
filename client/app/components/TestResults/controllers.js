@@ -1,17 +1,20 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data'])
-        .controller('ListTestResultsCtrl', function($scope, TestResults, $timeout) {
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'infinite-scroll'])
+        .controller('ListTestResultsCtrl', function($scope, TestResults) {
             $scope.loading = true;
-            var getData = function() {
-                TestResults.get({}, function(data) {
-                    $scope.buildID = data.build_id;
-                    $scope.results = data.test_results;
-                    $scope.loading = false;
-                });
+            $scope.config = {};
+            TestResults.get({}, function(data) {
+                $scope.buildID = data.build_id;
+                $scope.results = data.test_results;
+                $scope.config.limitAmount = 20;
+                $scope.loading = false;
+            });
+
+            $scope.addMoreItems = function() {
+                $scope.config.limitAmount += 20;
             };
-            $timeout(getData, 0);
 
         });
 
