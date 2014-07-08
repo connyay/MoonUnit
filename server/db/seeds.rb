@@ -18,3 +18,6 @@
 #		test.test_results.create(:test_run_id => testRun.id, :result => "pass")
 #	end
 #end
+
+User.create(:name => "jllankfo@us.ibm.com")
+User.create(:name => "cjhindle@us.ibm.com")
