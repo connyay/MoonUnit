@@ -1,0 +1,20 @@
+<h2 class="page-header">Users</h2>
+
+<form class="form-inline pull-right" name="form" role="form">
+        <div class="form-group">
+            <input type="text" class="form-control" ng-model="filterText" placeholder="Filter">
+        </div>
+    </form>
+    
+<ul class="list-unstyled">
+    <li ng-repeat="user in users | filter:filterText">
+        <h4>{{user.name}}
+            <small ng-if="user.test_runs.length">
+                <ng-pluralize count="user.test_runs.length" when="{
+                     'one': '(1 build)',
+                     'other': '({} builds)'}">
+                </ng-pluralize>
+            </small>
+        </h4>
+    </li>
+</ul>

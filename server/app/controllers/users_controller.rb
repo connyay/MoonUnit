@@ -1,10 +1,8 @@
 class UsersController < ApplicationController
 
 	def index 
-		respond_to do |format|
-			users = User.includes(:test_runs).all
-			format.json{render :json => users, :status => :ok}
-		end
+		users = User.includes(:test_runs).all
+		render :json => users, :status => :ok
 	end
 
 	private

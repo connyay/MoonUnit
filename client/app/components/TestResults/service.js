@@ -11,7 +11,7 @@
                         isArray: true
                     },
                     'get': {
-                        url: '/test_runs/1.json',
+                        url: '/test_runs/:id.json',
                         method: 'GET',
                         cache: true
                     },

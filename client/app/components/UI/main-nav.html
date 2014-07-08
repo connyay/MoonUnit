@@ -10,15 +10,12 @@
             <a class="navbar-brand" href="#"><i class="fa fa-moon-o"></i> MoonUnit</a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ng-repeat="item in navItems">
+                <li ng-repeat="item in navItems" is-active route="/{{item.route}}">
                     <a href="#{{item.route}}" title="{{item.title}}"><i class="fa fa-{{item.icon}}"></i> {{item.title}}</a>
                 </li>
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container -->
 </nav>

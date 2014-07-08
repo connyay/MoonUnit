@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'moonunit.ui.directives'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.smokebuilds', 'moonunit.users', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/dashboard', {
@@ -17,28 +17,6 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.builds.controllers', [])
-        .controller('ListBuildsCtrl', function($scope) {
-            
-        });
-
-})();
-(function() {
-    'use strict';
-
-    angular.module('moonunit.builds', ['ngRoute', 'moonunit.builds.controllers'])
-        .config(function($routeProvider) {
-            $routeProvider
-                .when('/builds', {
-                    templateUrl: 'components/Builds/templates/builds.html',
-                    controller: 'ListBuildsCtrl'
-                });
-        });
-
-})();
-(function() {
-    'use strict';
-
     angular.module('moonunit.dashboard.controllers', [])
         .controller('DashboardCtrl', function($scope) {});
 
@@ -46,35 +24,22 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.ui.directives', [])
-        .directive('mainNav', function() {
-            return {
-                restrict: 'E',
-                replace: true,
-                templateUrl: 'components/UI/main-nav.html',
-                controller: function($scope) {
-                    $scope.navItems = [{
-                        title: 'Dashboard',
-                        route: 'dashboard',
-                        icon: 'dashboard',
-                    }, {
-                        title: 'Users',
-                        icon: 'users',
-                        route: 'users'
-                    }, {
-                        title: 'Smoke Builds',
-                        icon: 'cloud-download',
-                        route: 'smoke-builds'
-                    }];
-                }
-            };
-        })
-        .directive('loading', function() {
-            return {
-                restrict: 'E',
-                templateUrl: 'components/UI/loading.html'
-            };
+    angular.module('moonunit.smokebuilds.controllers', [])
+        .controller('ListSmokeBuildsCtrl', function($scope) {});
+
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.smokebuilds', ['ngRoute', 'moonunit.smokebuilds.controllers'])
+        .config(function($routeProvider) {
+            $routeProvider
+                .when('/smoke-builds', {
+                    templateUrl: 'components/SmokeBuilds/templates/smoke-builds.html',
+                    controller: 'ListSmokeBuildsCtrl'
+                });
         });
+
 })();
 (function() {
     'use strict';
@@ -131,7 +96,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults', ['ngRoute', 'moonunit.testResults.controllers'])
+    angular.module('moonunit.testResults', ['ngRoute', 'moonunit.testResults.controllers', 'moonunit.testResults.data'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/test-results', {
@@ -154,10 +119,98 @@
                         isArray: true
                     },
                     'get': {
-                        url: '/test_runs/1.json',
+                        url: '/test_runs/:id.json',
                         method: 'GET',
                         cache: true
                     },
+                });
+            }
+        ]);
+
+})();
+(function() {
+    'use strict';
+    var defaultActiveClass = 'active';
+    angular.module('moonunit.ui.directives', [])
+        .directive('mainNav', function() {
+            return {
+                restrict: 'E',
+                replace: true,
+                templateUrl: 'components/UI/main-nav.html',
+                controller: function($scope) {
+                    $scope.navItems = [{
+                        title: 'Dashboard',
+                        route: 'dashboard',
+                        icon: 'dashboard',
+                    }, {
+                        title: 'Users',
+                        icon: 'users',
+                        route: 'users'
+                    }, {
+                        title: 'Smoke Builds',
+                        icon: 'cloud-download',
+                        route: 'smoke-builds'
+                    }];
+                }
+            };
+        })
+        .directive('isActive', ['$location',
+            function($location) {
+                return {
+                    restrict: 'A',
+                    link: function($scope, element, attrs) {
+                        var activeClass = attrs.activeClass || defaultActiveClass;
+
+                        var path = attrs.route || (attrs.href || attrs.ngHref).substr(1);
+                        $scope.location = $location;
+                        $scope.$watch('location.path()', function(newPath) {
+                            element.toggleClass(activeClass, (path === newPath));
+                        });
+                    }
+                };
+            }
+        ])
+        .directive('loading', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/loading.html'
+            };
+        });
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.users.controllers', ['moonunit.users.data'])
+        .controller('ListUsersCtrl', function($scope, Users) {
+            Users.query({}, function(users) {
+                $scope.users = users;
+            })
+        });
+
+})();
+(function() {
+    'use strict';
+
+    angular.module('moonunit.users', ['ngRoute', 'moonunit.users.controllers'])
+        .config(function($routeProvider) {
+            $routeProvider
+                .when('/users', {
+                    templateUrl: 'components/Users/templates/users.html',
+                    controller: 'ListUsersCtrl'
+                });
+        });
+
+})();
+(function() {
+    'use strict';
+    angular.module('moonunit.users.data', ['ngResource'])
+        .factory('Users', ['$resource',
+            function($resource) {
+                return $resource('/users', {}, {
+                    'query': {
+                        method: 'GET',
+                        isArray: true
+                    }
                 });
             }
         ]);
