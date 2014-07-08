@@ -46,7 +46,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'infinite-scroll', 'ngGrid'])
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'ngGrid'])
         .controller('ListTestResultsCtrl', function($scope, TestResults) {
             $scope.loading = true;
             $scope.config = {};
@@ -145,13 +145,13 @@
                         route: 'dashboard',
                         icon: 'dashboard',
                     }, {
-                        title: 'Builds',
-                        icon: 'shield',
-                        route: 'builds'
+                        title: 'Users',
+                        icon: 'users',
+                        route: 'users'
                     }, {
-                        title: 'Test Results',
-                        icon: 'gavel',
-                        route: 'test-results'
+                        title: 'Smoke Builds',
+                        icon: 'cloud-download',
+                        route: 'smoke-builds'
                     }];
                 }
             };
