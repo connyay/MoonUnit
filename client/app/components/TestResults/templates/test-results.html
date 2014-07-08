@@ -2,11 +2,25 @@
     <small>{{buildID}}</small>
 </h1>
 
+<loading ng-if="loading"></loading>
 
-<ul>
-    <li ng-repeat="result in results">
-        <p>Package: {{result.package}}</p>
-        <p>Class Name: {{result.class_name}}</p>
-        <p>Result: {{result.result}}</p>
-    </li>
-</ul>
+<table class="table table-hover tabled-fixed" ng-if="!loading">
+    <thead>
+        <tr>
+            <th>Package</th>
+            <th>Class Name</th>
+            <th>Test Name</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="result in results">
+            <td>{{result.package}}</td>
+            <td>{{result.class_name}}</td>
+            <td>{{result.name}}</td>
+            <td>
+                <span class="label" ng-class="{'label-success': result.result === 'pass', 'label-danger': result.result !== 'pass'}">{{result.result}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -8,14 +8,12 @@
                 }, {
                     'query': {
                         method: 'GET',
-                        isArray: true,
-                        transformResponse: function(data) {
-                            debugger;
-                        }
+                        isArray: true
                     },
                     'get': {
                         url: '/test_runs/1.json',
-                        method: 'GET'
+                        method: 'GET',
+                        cache: true
                     },
                 });
             }

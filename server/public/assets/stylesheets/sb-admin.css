@@ -327,3 +327,8 @@ table.dataTable thead .sorting:after {
 .show-grid {
     margin: 15px 0;
 }
+
+.tabled-fixed {
+    table-layout: fixed;
+    word-wrap: break-word;
+}

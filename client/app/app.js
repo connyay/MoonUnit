@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'sideNavDirective'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'loadingDirective', 'sideNavDirective'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/dashboard', {

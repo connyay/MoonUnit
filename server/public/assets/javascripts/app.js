@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'sideNavDirective'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.dashboard.controllers', 'moonunit.builds', 'moonunit.testResults', 'loadingDirective', 'sideNavDirective'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/dashboard', {
@@ -40,11 +40,17 @@
     'use strict';
 
     angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data'])
-        .controller('ListTestResultsCtrl', function($scope, TestResults) {
-            TestResults.get({}, function(data) {
-                $scope.buildID = data.build_id;
-                $scope.results = data.test_results;
-            });
+        .controller('ListTestResultsCtrl', function($scope, TestResults, $timeout) {
+            $scope.loading = true;
+            var getData = function() {
+                TestResults.get({}, function(data) {
+                    $scope.buildID = data.build_id;
+                    $scope.results = data.test_results;
+                    $scope.loading = false;
+                });
+            };
+            $timeout(getData, 0);
+
         });
 
 })();
@@ -71,14 +77,12 @@
                 }, {
                     'query': {
                         method: 'GET',
-                        isArray: true,
-                        transformResponse: function(data) {
-                            debugger;
-                        }
+                        isArray: true
                     },
                     'get': {
                         url: '/test_runs/1.json',
-                        method: 'GET'
+                        method: 'GET',
+                        cache: true
                     },
                 });
             }
