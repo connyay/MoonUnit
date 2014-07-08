@@ -13,6 +13,17 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
+gulp.task('less', function() {
+    //combine all js files of the app
+    gulp.src(['./app/styles/master.less'])
+        .pipe(plugins.less({
+            paths: [path.join(__dirname, 'less', 'includes')]
+        }))
+        .pipe(plugins.concat('styles.min.css'))
+        .pipe(plugins.minifyCss())
+        .pipe(gulp.dest('../server/public/assets/stylesheets'));
+});
+
 gulp.task('templates', function() {
     //combine all template files of the app into a js file
     gulp.src(['!./app/index.html',
@@ -31,7 +42,6 @@ gulp.task('vendorJS', function() {
         './bower_components/angular/angular.js',
         './bower_components/angular-route/angular-route.js',
         './bower_components/angular-resource/angular-resource.js',
-        './bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
         './bower_components/ng-grid/build/ng-grid.js'
     ])
         .pipe(plugins.concat('lib.js'))
@@ -42,11 +52,13 @@ gulp.task('vendorJS', function() {
 gulp.task('watch', function() {
     gulp.watch([
         '../server/public/**/*.html',
+        '../server/public/**/*.css',
         '../server/public/**/*.js'
     ], function(event) {
         return gulp.src(event.path)
             .pipe(plugins.connect.reload());
     });
+    gulp.watch(['./app/**/*.less'], ['less']);
     gulp.watch(['./app/**/*.js', '!./app/**/*test.js'], ['scripts']);
     gulp.watch(['!./app/index.html', './app/**/*.html'], ['templates']);
 
@@ -57,4 +69,4 @@ gulp.task('connect', plugins.connect.server({
     livereload: true
 }));
 
-gulp.task('default', ['connect', 'scripts', 'templates', 'vendorJS', 'watch']);
+gulp.task('default', ['connect', 'less', 'scripts', 'templates', 'vendorJS', 'watch']);

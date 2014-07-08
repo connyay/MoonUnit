@@ -13,13 +13,13 @@
                         route: 'dashboard',
                         icon: 'dashboard',
                     }, {
-                        title: 'Builds',
-                        icon: 'shield',
-                        route: 'builds'
+                        title: 'Users',
+                        icon: 'users',
+                        route: 'users'
                     }, {
-                        title: 'Test Results',
-                        icon: 'gavel',
-                        route: 'test-results'
+                        title: 'Smoke Builds',
+                        icon: 'cloud-download',
+                        route: 'smoke-builds'
                     }];
                 }
             };

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'infinite-scroll', 'ngGrid'])
+    angular.module('moonunit.testResults.controllers', ['moonunit.testResults.data', 'ngGrid'])
         .controller('ListTestResultsCtrl', function($scope, TestResults) {
             $scope.loading = true;
             $scope.config = {};
