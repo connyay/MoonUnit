@@ -5,6 +5,11 @@ class UsersController < ApplicationController
 		render :json => users, :status => :ok
 	end
 
+	def show
+		user = User.find_by(:name => params[:name])
+		render :json => user, :status => :ok
+	end
+
 	private
 
 	def default_serializer_options
