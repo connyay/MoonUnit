@@ -54,10 +54,9 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  post '/import' => 'import#create'
-  resources :test_runs do
-    resources :packages, :constraints => { :id => /[\w+\.]+/ }
-
+  resources :users, param: :name, :constraints => { :user_name => /[\w@\.]+/ } do 
+    post '/import' => 'import#create'
+    resources :test_runs
   end
   root 'test_runs#index'
 end

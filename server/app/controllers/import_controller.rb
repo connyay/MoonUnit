@@ -6,14 +6,15 @@ class ImportController < ApplicationController
 	
 	def create
 
+		user = User.find_by(:name => params[:user_name])
 		#XML parsing code
 		doc = Nokogiri::XML(request.body.read)
 		#try to get the build id from this property 
 		build = doc.css("property[name='latestGoodBuild']")[0][:value]
 
 		#Use existing or create new build
-		test_run = TestRun.find_by(:build_id => build)
-		test_run = TestRun.create(:build_id => build) if not test_run
+		test_run = user.test_runs.find_by(:build_id => build)
+		test_run = user.test_runs.create(:build_id => build) if not test_run
 
 		tests = doc.css("testcase")
 		tests.each do |test|
