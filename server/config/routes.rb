@@ -58,5 +58,5 @@ Rails.application.routes.draw do
     post '/import' => 'import#create'
     resources :test_runs
   end
-  root 'test_runs#index'
+  root 'application#index'
 end
