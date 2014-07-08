@@ -2,25 +2,29 @@
     <small>{{buildID}}</small>
 </h1>
 
-<loading ng-if="loading"></loading>
-
-<table class="table table-hover tabled-fixed" ng-if="!loading">
+<form class="form-inline pull-right" name="form" role="form">
+    <div class="form-group">
+        <input type="text" class="form-control" ng-model="filterText" placeholder="Filter">
+    </div>
+</form>
+<table class="table table-hover tabled-fixed">
     <thead>
         <tr>
             <th>Package</th>
             <th>Class Name</th>
             <th>Test Name</th>
-            <th>Result</th>
+            <th class="col-lg-1">Result</th>
         </tr>
     </thead>
-    <tbody>
-        <tr ng-repeat="result in results">
+    <tbody ng-if="!loading">
+        <tr ng-repeat="result in results | filter:filterText">
             <td>{{result.package}}</td>
             <td>{{result.class_name}}</td>
-            <td>{{result.name}}</td>
+            <td class="col-lg-1">{{result.name}}</td>
             <td>
                 <span class="label" ng-class="{'label-success': result.result === 'pass', 'label-danger': result.result !== 'pass'}">{{result.result}}</span>
             </td>
         </tr>
     </tbody>
 </table>
+<loading ng-if="loading"></loading>
