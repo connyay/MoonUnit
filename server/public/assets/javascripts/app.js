@@ -197,8 +197,10 @@
 
     angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
         .controller('ListUsersCtrl', function($scope, Users) {
+            $scope.loading = true;
             var getUsers = function() {
                 Users.query({}, function(users) {
+                    $scope.loading = false;
                     $scope.users = users;
                 });
             };
@@ -208,10 +210,12 @@
             };
         })
         .controller('ShowUserCtrl', function($scope, $routeParams, Users) {
+            $scope.loading = true;
             var getUser = function() {
                 Users.get({
                     username: $routeParams.username
                 }, function(user) {
+                    $scope.loading = false;
                     $scope.user = user;
                 });
             };
