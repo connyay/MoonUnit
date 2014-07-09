@@ -21,8 +21,8 @@
     <li ng-if="!loading && !user.test_runs.length">No builds found</li>
 </ul>
 
-<div class="text-center">
-    <ul class="pagination" ng-if="!filterText">
+<div class="text-center" ng-if="!filterText && pagination.numPages > 1">
+    <ul class="pagination">
         <li ng-click="pagination.prevPage()" ng-class="{disabled: pagination.page === 0}"><a href>&laquo;</a></li>
         <li ng-repeat="n in [] | range: pagination.numPages" ng-class="{active: n == pagination.page}"><a ng-click="pagination.toPageId(n)">{{n + 1}}</a>
         </li>
