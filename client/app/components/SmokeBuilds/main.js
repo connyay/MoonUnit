@@ -7,6 +7,10 @@
                 .when('/smoke-builds', {
                     templateUrl: 'components/SmokeBuilds/templates/smoke-builds.html',
                     controller: 'ListSmokeBuildsCtrl'
+                })
+                .when('/smoke-builds/:id', {
+                    templateUrl: 'components/SmokeBuilds/templates/smoke-build.html',
+                    controller: 'ShowSmokeBuildCtrl'
                 });
         });
 

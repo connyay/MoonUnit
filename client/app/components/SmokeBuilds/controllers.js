@@ -19,5 +19,22 @@
                 getBuilds();
             };
         })
+        .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
+            $scope.loading = true;
+            var getBuild = function() {
+                Data.testRuns({
+                    username: 'rmauto@us.ibm.com',
+                    id: $routeParams.id
+                }, function(smokeBuild) {
+                    $scope.loading = false;
+                    $scope.smokeBuild = smokeBuild;
+                    $scope.data = $scope.initData = smokeBuild.test_results;
+                });
+            };
+            getBuild();
+            $scope.refresh = function() {
+                getBuild();
+            };
+        })
 
 })();
