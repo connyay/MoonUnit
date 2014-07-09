@@ -9,6 +9,8 @@
                 controller: function($scope, $filter) {
                     $scope.initData = [];
                     $scope.data = [];
+                    $scope.passed = 0;
+                    $scope.failed = 0;
                     $scope.radioFilter = 'all';
                     $scope.$watch('radioFilter', function(value) {
                         if (value === 'all') {
@@ -19,8 +21,42 @@
                             result: value
                         });
                     });
+
+                    $scope.$watch('data', function(data) {
+                        var pass = 0,
+                            fail = 0,
+                            i = 0,
+                            total = data.length;
+                        for (i = 0; i < total; i++) {
+                            if (data[i].result === 'pass') {
+                                pass++;
+                            } else {
+                                fail++;
+                            }
+                        }
+                        $scope.passed = pass;
+                        $scope.failed = fail;
+                        $scope.total = total;
+                    });
                     $scope.filterOptions = {
                         filterText: ''
+                    };
+
+                    $scope.aggregate = function(row) {
+                        if (row.field === 'package') {
+                            var pass = 0,
+                                fail = 0,
+                                i = 0,
+                                length = row.children.length;
+                            for (i = 0; i < length; i++) {
+                                if (row.children[i].entity.result === 'pass') {
+                                    pass++;
+                                } else {
+                                    fail++;
+                                }
+                            }
+                            return pass + ' Passed | ' + fail + ' Failed';
+                        }
                     };
                     $scope.gridOptions = {
                         data: 'data',
@@ -28,7 +64,7 @@
                         columnDefs: [{
                             field: 'package',
                             displayName: 'Package',
-                            width: '**',
+                            width: '**'
                         }, {
                             field: 'class_name',
                             displayName: 'Class Name',
@@ -36,7 +72,7 @@
                         }, {
                             field: 'name',
                             displayName: 'Test Name',
-                            cellTemplate: '<div class="ngCellText colt{{$index}}" title="{{ row.entity[col.field]}}">{{ row.entity[col.field]}}</div>',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',
                             width: '**',
                         }, {
                             field: 'time',
@@ -49,7 +85,11 @@
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
-                        groups: ['package']
+                        groups: ['package'],
+                        aggregateTemplate: '<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">' +
+                            '   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>' +
+                            '   <div class="{{row.aggClass()}}"></div>' +
+                            '</div>'
                     };
 
                 }

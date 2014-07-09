@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
 	def index 
-		users = User.includes(:test_runs).all
+		users = User.includes(:test_runs).where("users.name <> 'rmauto@us.ibm.com'")
 		render :json => users, :status => :ok
 	end
 

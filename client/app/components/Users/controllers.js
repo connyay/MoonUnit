@@ -2,9 +2,11 @@
     'use strict';
 
     angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
-        .controller('ListUsersCtrl', function($scope, Users) {
+        .controller('ListUsersCtrl', function($scope, Data) {
+            $scope.loading = true;
             var getUsers = function() {
-                Users.query({}, function(users) {
+                Data.users({}, function(users) {
+                    $scope.loading = false;
                     $scope.users = users;
                 });
             };
@@ -13,12 +15,16 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination) {
+            $scope.loading = true;
+            $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
-                Users.get({
+                Data.user({
                     username: $routeParams.username
                 }, function(user) {
+                    $scope.loading = false;
                     $scope.user = user;
+                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
                 });
             };
             getUser();
@@ -26,11 +32,11 @@
                 getUser();
             };
         })
-        .controller('ShowUserResultCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
             $scope.user = $routeParams.username;
             $scope.loading = true;
             var getResult = function() {
-                Users.result({
+                Data.testRuns({
                     username: $routeParams.username,
                     id: $routeParams.id
                 }, function(result) {

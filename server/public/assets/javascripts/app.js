@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.smokebuilds', 'moonunit.users', 'ui.bootstrap', 'moonunit.ui.directives'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.smokebuilds', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .otherwise({
@@ -13,18 +13,18 @@
 (function() {
     'use strict';
     angular.module('moonunit.data', ['ngResource'])
-        .factory('Users', ['$resource',
+        .factory('Data', ['$resource',
             function($resource) {
                 return $resource('/users', {}, {
-                    'query': {
+                    'users': {
                         method: 'GET',
                         isArray: true
                     },
-                    'get': {
+                    'user': {
                         url: '/users/:username',
                         method: 'GET'
                     },
-                    'result': {
+                    'testRuns': {
                         url: '/users/:username/test_runs/:id',
                         method: 'GET',
                         cache: true
@@ -45,6 +45,8 @@
                 controller: function($scope, $filter) {
                     $scope.initData = [];
                     $scope.data = [];
+                    $scope.passed = 0;
+                    $scope.failed = 0;
                     $scope.radioFilter = 'all';
                     $scope.$watch('radioFilter', function(value) {
                         if (value === 'all') {
@@ -55,8 +57,42 @@
                             result: value
                         });
                     });
+
+                    $scope.$watch('data', function(data) {
+                        var pass = 0,
+                            fail = 0,
+                            i = 0,
+                            total = data.length;
+                        for (i = 0; i < total; i++) {
+                            if (data[i].result === 'pass') {
+                                pass++;
+                            } else {
+                                fail++;
+                            }
+                        }
+                        $scope.passed = pass;
+                        $scope.failed = fail;
+                        $scope.total = total;
+                    });
                     $scope.filterOptions = {
                         filterText: ''
+                    };
+
+                    $scope.aggregate = function(row) {
+                        if (row.field === 'package') {
+                            var pass = 0,
+                                fail = 0,
+                                i = 0,
+                                length = row.children.length;
+                            for (i = 0; i < length; i++) {
+                                if (row.children[i].entity.result === 'pass') {
+                                    pass++;
+                                } else {
+                                    fail++;
+                                }
+                            }
+                            return pass + ' Passed | ' + fail + ' Failed';
+                        }
                     };
                     $scope.gridOptions = {
                         data: 'data',
@@ -64,7 +100,7 @@
                         columnDefs: [{
                             field: 'package',
                             displayName: 'Package',
-                            width: '**',
+                            width: '**'
                         }, {
                             field: 'class_name',
                             displayName: 'Class Name',
@@ -72,7 +108,7 @@
                         }, {
                             field: 'name',
                             displayName: 'Test Name',
-                            cellTemplate: '<div class="ngCellText colt{{$index}}" title="{{ row.entity[col.field]}}">{{ row.entity[col.field]}}</div>',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',
                             width: '**',
                         }, {
                             field: 'time',
@@ -85,7 +121,11 @@
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
-                        groups: ['package']
+                        groups: ['package'],
+                        aggregateTemplate: '<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">' +
+                            '   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>' +
+                            '   <div class="{{row.aggClass()}}"></div>' +
+                            '</div>'
                     };
 
                 }
@@ -96,7 +136,40 @@
     'use strict';
 
     angular.module('moonunit.smokebuilds.controllers', [])
-        .controller('ListSmokeBuildsCtrl', function($scope) {});
+        .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination) {
+            $scope.loading = true;
+            $scope.pagination = Pagination.getNew(15);
+            var getBuilds = function() {
+                Data.user({
+                    username: 'rmauto@us.ibm.com'
+                }, function(user) {
+                    $scope.loading = false;
+                    $scope.user = user;
+                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
+                });
+            };
+            getBuilds();
+            $scope.refresh = function() {
+                getBuilds();
+            };
+        })
+        .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
+            $scope.loading = true;
+            var getBuild = function() {
+                Data.testRuns({
+                    username: 'rmauto@us.ibm.com',
+                    id: $routeParams.id
+                }, function(smokeBuild) {
+                    $scope.loading = false;
+                    $scope.smokeBuild = smokeBuild;
+                    $scope.data = $scope.initData = smokeBuild.test_results;
+                });
+            };
+            getBuild();
+            $scope.refresh = function() {
+                getBuild();
+            };
+        })
 
 })();
 (function() {
@@ -108,6 +181,10 @@
                 .when('/smoke-builds', {
                     templateUrl: 'components/SmokeBuilds/templates/smoke-builds.html',
                     controller: 'ListSmokeBuildsCtrl'
+                })
+                .when('/smoke-builds/:id', {
+                    templateUrl: 'components/SmokeBuilds/templates/smoke-build.html',
+                    controller: 'ShowSmokeBuildCtrl'
                 });
         });
 
@@ -153,7 +230,10 @@
         .directive('loading', function() {
             return {
                 restrict: 'E',
-                templateUrl: 'components/UI/loading.html'
+                templateUrl: 'components/UI/loading.html',
+                link: function($scope, $element, $attrs) {
+                    $scope.size = $attrs.size || 'large';
+                }
             };
         })
         .directive('filter', function() {
@@ -173,9 +253,11 @@
     'use strict';
 
     angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
-        .controller('ListUsersCtrl', function($scope, Users) {
+        .controller('ListUsersCtrl', function($scope, Data) {
+            $scope.loading = true;
             var getUsers = function() {
-                Users.query({}, function(users) {
+                Data.users({}, function(users) {
+                    $scope.loading = false;
                     $scope.users = users;
                 });
             };
@@ -184,12 +266,16 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination) {
+            $scope.loading = true;
+            $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
-                Users.get({
+                Data.user({
                     username: $routeParams.username
                 }, function(user) {
+                    $scope.loading = false;
                     $scope.user = user;
+                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
                 });
             };
             getUser();
@@ -197,11 +283,11 @@
                 getUser();
             };
         })
-        .controller('ShowUserResultCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
             $scope.user = $routeParams.username;
             $scope.loading = true;
             var getResult = function() {
-                Users.result({
+                Data.testRuns({
                     username: $routeParams.username,
                     id: $routeParams.id
                 }, function(result) {

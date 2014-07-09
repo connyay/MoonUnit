@@ -12,4 +12,11 @@
 </div>
 <br>
 <loading ng-if="loading"></loading>
+
+<div class="progress" ng-if="!loading">
+    <div class="progress-bar progress-bar-danger" style="width: {{(failed / total) * 100}}%" tooltip="{{failed}} Failed">
+    </div>
+    <div class="progress-bar progress-bar-success" style="width: {{(passed / total) * 100}}%" tooltip="{{passed}} Passed">
+    </div>
+</div>
 <div class="test-results" ng-grid="gridOptions" ng-if="!loading"></div>
