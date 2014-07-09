@@ -22,13 +22,29 @@
                     $scope.filterOptions = {
                         filterText: ''
                     };
+
+                    $scope.aggregate = function(row) {
+                        if (row.field === 'package') {
+                            //debugger;
+                            var pass = 0,
+                                fail = 0;
+                            row.children.forEach(function(child) {
+                                if (child.entity.result === 'pass') {
+                                    pass++;
+                                } else {
+                                    fail++;
+                                }
+                            });
+                            return pass + ' Passed | ' + fail + ' Failed';
+                        }
+                    };
                     $scope.gridOptions = {
                         data: 'data',
                         showGroupPanel: true,
                         columnDefs: [{
                             field: 'package',
                             displayName: 'Package',
-                            width: '**',
+                            width: '**'
                         }, {
                             field: 'class_name',
                             displayName: 'Class Name',
@@ -36,7 +52,7 @@
                         }, {
                             field: 'name',
                             displayName: 'Test Name',
-                            cellTemplate: '<div class="ngCellText colt{{$index}}" title="{{ row.entity[col.field]}}">{{ row.entity[col.field]}}</div>',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',
                             width: '**',
                         }, {
                             field: 'time',
@@ -49,7 +65,11 @@
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
-                        groups: ['package']
+                        groups: ['package'],
+                        aggregateTemplate: '<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">' +
+                            '   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>' +
+                            '   <div class="{{row.aggClass()}}"></div>' +
+                            '</div>'
                     };
 
                 }
