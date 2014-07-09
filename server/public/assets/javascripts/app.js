@@ -173,7 +173,10 @@
         .directive('loading', function() {
             return {
                 restrict: 'E',
-                templateUrl: 'components/UI/loading.html'
+                templateUrl: 'components/UI/loading.html',
+                link: function($scope, $element, $attrs) {
+                    $scope.size = $attrs.size || 'large';
+                }
             };
         })
         .directive('filter', function() {

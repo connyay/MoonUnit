@@ -3,7 +3,9 @@
     </li>
     <li><a href="#/users/{{user}}">{{user}}</a>
     </li>
-    <li class="active">{{result.build_id}} <i class="fa fa-spinner fa-spin" ng-if="loading"></i></li>
+    <li class="active">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
 </ol>
 <div class="page-header">
     <h2>Test Results
@@ -12,4 +14,3 @@
 </div>
 
 <result-table></result-table>
-
