@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708184745) do
+ActiveRecord::Schema.define(version: 20140709030452) do
 
   create_table "test_results", force: true do |t|
     t.integer  "test_id"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20140708184745) do
     t.float    "time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "checksum"
   end
 
   add_index "test_results", ["test_id"], name: "index_test_results_on_test_id"
