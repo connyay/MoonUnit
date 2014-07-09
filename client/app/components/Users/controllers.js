@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'simplePagination'])
         .controller('ListUsersCtrl', function($scope, Users) {
             $scope.loading = true;
             var getUsers = function() {
@@ -15,14 +15,16 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserCtrl', function($scope, $routeParams, Users, Pagination) {
             $scope.loading = true;
+            $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
                 Users.get({
                     username: $routeParams.username
                 }, function(user) {
                     $scope.loading = false;
                     $scope.user = user;
+                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
                 });
             };
             getUser();
