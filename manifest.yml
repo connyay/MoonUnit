@@ -1,0 +1,12 @@
+---
+domain: stage1.mybluemix.net
+disk: 246M
+mem: 512M
+instances: 1
+applications:
+- name: moonunit
+  host: moonunit
+  path: ./server
+  buildpack: https://github.com/heroku/heroku-buildpack-ruby.git
+  services:
+  - moonunit-mysql

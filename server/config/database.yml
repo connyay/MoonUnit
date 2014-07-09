@@ -21,5 +21,11 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: mysql2
+  pool: 5
+  timeout: 5000
+  host: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['hostname'] rescue 'localhost' %>
+  port: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['port'] rescue 3306 %>
+  database: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['name'] rescue '' %>
+  username: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['username'] rescue '' %>
+  password: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['password'] rescue '' %>
