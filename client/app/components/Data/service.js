@@ -1,18 +1,18 @@
 (function() {
     'use strict';
     angular.module('moonunit.data', ['ngResource'])
-        .factory('Users', ['$resource',
+        .factory('Data', ['$resource',
             function($resource) {
                 return $resource('/users', {}, {
-                    'query': {
+                    'users': {
                         method: 'GET',
                         isArray: true
                     },
-                    'get': {
+                    'user': {
                         url: '/users/:username',
                         method: 'GET'
                     },
-                    'result': {
+                    'testRuns': {
                         url: '/users/:username/test_runs/:id',
                         method: 'GET',
                         cache: true

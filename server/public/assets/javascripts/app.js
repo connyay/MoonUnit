@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.smokebuilds', 'moonunit.users', 'ui.bootstrap', 'moonunit.ui.directives'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.smokebuilds', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .otherwise({
@@ -13,18 +13,18 @@
 (function() {
     'use strict';
     angular.module('moonunit.data', ['ngResource'])
-        .factory('Users', ['$resource',
+        .factory('Data', ['$resource',
             function($resource) {
                 return $resource('/users', {}, {
-                    'query': {
+                    'users': {
                         method: 'GET',
                         isArray: true
                     },
-                    'get': {
+                    'user': {
                         url: '/users/:username',
                         method: 'GET'
                     },
-                    'result': {
+                    'testRuns': {
                         url: '/users/:username/test_runs/:id',
                         method: 'GET',
                         cache: true
@@ -116,7 +116,23 @@
     'use strict';
 
     angular.module('moonunit.smokebuilds.controllers', [])
-        .controller('ListSmokeBuildsCtrl', function($scope) {});
+        .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination) {
+            $scope.loading = true;
+            $scope.pagination = Pagination.getNew(15);
+            var getBuilds = function() {
+                Data.user({
+                    username: 'rmauto@us.ibm.com'
+                }, function(user) {
+                    $scope.loading = false;
+                    $scope.user = user;
+                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
+                });
+            };
+            getBuilds();
+            $scope.refresh = function() {
+                getBuilds();
+            };
+        })
 
 })();
 (function() {
@@ -195,11 +211,11 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'simplePagination'])
-        .controller('ListUsersCtrl', function($scope, Users) {
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+        .controller('ListUsersCtrl', function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
-                Users.query({}, function(users) {
+                Data.users({}, function(users) {
                     $scope.loading = false;
                     $scope.users = users;
                 });
@@ -209,11 +225,11 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Users, Pagination) {
+        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination) {
             $scope.loading = true;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
-                Users.get({
+                Data.user({
                     username: $routeParams.username
                 }, function(user) {
                     $scope.loading = false;
@@ -226,11 +242,11 @@
                 getUser();
             };
         })
-        .controller('ShowUserResultCtrl', function($scope, $routeParams, Users) {
+        .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
             $scope.user = $routeParams.username;
             $scope.loading = true;
             var getResult = function() {
-                Users.result({
+                Data.testRuns({
                     username: $routeParams.username,
                     id: $routeParams.id
                 }, function(result) {
