@@ -42,6 +42,9 @@ module ImportModule
 					result = "fail"
 				end
 
+				#ignore duplicate tests like licenseAvailability until I can find a better solution
+				next if test_record.test_results.find_by(:test_run_id => test_run.id)
+
 				test_record.test_results.create(:result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id], :log => log )
 
 			end
