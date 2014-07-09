@@ -19,5 +19,46 @@
 #	end
 #end
 
-User.create(:name => "jllankfo@us.ibm.com")
+user = User.create(:name => "jllankfo@us.ibm.com")
 User.create(:name => "cjhindle@us.ibm.com")
+
+# conn = ActiveRecord::Base.connection
+# inserts = []
+# a = 0
+
+# puts "Creating tests..."
+# #Create 2000 tests
+# 4.times do 
+# 	500.times do
+# 		a = a + 1
+# 		inserts.push("('com.ibm.test', 'TestClass', 'test#{a}')");
+# 	end
+# 	sql = "INSERT INTO tests ('package', 'class_name', 'name') VALUES #{inserts.join(", ")}"
+# 	conn.execute sql
+# 	inserts.clear
+# end
+
+# a = 0
+# b = 0
+# inserts.clear
+
+# puts "Creating builds and results..."
+# t1 = Time.now.to_f
+# 50.times do
+# 	a = a + 1
+# 	test_run = user.test_runs.create(:build_id => "testBuild#{a}")
+
+# 	4.times do 
+# 		500.times do
+# 			b = b + 1
+# 			inserts.push("(#{b}, #{a}, 'pass', '123')");
+# 		end
+# 		sql = "INSERT INTO test_results ('test_id', 'test_run_id', 'result', 'checksum') VALUES #{inserts.join(", ")}"
+# 		conn.execute sql
+# 		inserts.clear
+# 		b=0
+# 	end
+# end
+# t2 = Time.now.to_f
+
+# puts "Finished in #{t2-t1}s"
