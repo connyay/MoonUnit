@@ -29,11 +29,21 @@ module ImportModule
 				class_name = full_name[r+1..full_name.length]
 
 				result = "pass"
-				result = "fail" if test.css("failure").any?
 				time = test[:time].to_f
 
+				#fetch or create the test record
 				test_record = create_test(package, class_name, name)
-				test_record.test_results.create(:result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id])
+
+				failure = test.css("failure")
+				log = nil
+
+				if failure.any?
+					log = failure.text
+					result = "fail"
+				end
+
+				test_record.test_results.create(:result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id], :log => log )
+
 			end
 		end
 
@@ -44,7 +54,6 @@ module ImportModule
 
 	def self.importFromUrl(user, uri)
 		response = Net::HTTP.get(URI.parse(uri))
-		puts response
 		return import(user,response)
 	end
 
