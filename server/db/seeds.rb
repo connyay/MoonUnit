@@ -22,7 +22,7 @@
 user = User.create(:name => "jllankfo@us.ibm.com")
 User.create(:name => "cjhindle@us.ibm.com")
 User.create(:name => "rmauto@us.ibm.com")
-
+User.create(:name => "nrkruk@us.ibm.com")
 # conn = ActiveRecord::Base.connection
 # inserts = []
 # a = 0
