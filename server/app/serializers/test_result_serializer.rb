@@ -14,4 +14,10 @@ class TestResultSerializer < ActiveModel::Serializer
 	def name
 		return object.test[:name]
 	end
+
+	def attributes
+  		data = super
+  		data[:build_id] = object.test_run.build_id if options[:include_build_id]
+  		return data
+	end
 end
