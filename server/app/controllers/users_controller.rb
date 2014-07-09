@@ -7,7 +7,14 @@ class UsersController < ApplicationController
 
 	def show
 		user = User.find_by(:name => params[:name])
-		render :json => user, :status => :ok
+		
+		#We have to check here since find by doesnt throw the recordNotFound exception
+		if user
+			render :json => user, :status => :ok
+		else
+			render :json => {:error => "User #{params[:name]} not found"}, :status => :not_found
+		end
+
 	end
 
 	private
