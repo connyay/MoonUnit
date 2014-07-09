@@ -45,6 +45,8 @@
                 controller: function($scope, $filter) {
                     $scope.initData = [];
                     $scope.data = [];
+                    $scope.passed = 0;
+                    $scope.failed = 0;
                     $scope.radioFilter = 'all';
                     $scope.$watch('radioFilter', function(value) {
                         if (value === 'all') {
@@ -55,22 +57,40 @@
                             result: value
                         });
                     });
+
+                    $scope.$watch('data', function(data) {
+                        var pass = 0,
+                            fail = 0,
+                            i = 0,
+                            total = data.length;
+                        for (i = 0; i < total; i++) {
+                            if (data[i].result === 'pass') {
+                                pass++;
+                            } else {
+                                fail++;
+                            }
+                        }
+                        $scope.passed = pass;
+                        $scope.failed = fail;
+                        $scope.total = total;
+                    });
                     $scope.filterOptions = {
                         filterText: ''
                     };
 
                     $scope.aggregate = function(row) {
                         if (row.field === 'package') {
-                            //debugger;
                             var pass = 0,
-                                fail = 0;
-                            row.children.forEach(function(child) {
-                                if (child.entity.result === 'pass') {
+                                fail = 0,
+                                i = 0,
+                                length = row.children.length;
+                            for (i = 0; i < length; i++) {
+                                if (row.children[i].entity.result === 'pass') {
                                     pass++;
                                 } else {
                                     fail++;
                                 }
-                            });
+                            }
                             return pass + ' Passed | ' + fail + ' Failed';
                         }
                     };

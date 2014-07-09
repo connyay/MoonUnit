@@ -56,7 +56,8 @@ gulp.task('watch', function() {
     gulp.watch([
         '../server/public/**/*.html',
         '../server/public/**/*.css',
-        '../server/public/**/*.js'
+        '../server/public/**/*.js',
+        '../server/**/*.rb'
     ], function(event) {
         return gulp.src(event.path)
             .pipe(plugins.connect.reload());
