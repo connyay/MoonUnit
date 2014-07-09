@@ -11,27 +11,32 @@ module ImportModule
 		build = doc.css("property[name='latestGoodBuild']")[0][:value]
 
 		#Use existing or create new build
-		test_run = user.test_runs.find_by(:build_id => build)
+		test_run = user.test_runs.includes(test_results: [:test]).find_by(:build_id => build)
 		test_run = user.test_runs.create(:build_id => build) if not test_run
 
 		tests = doc.css("testcase")
-		tests.each do |test|
-			test_result = test_run.test_results.find_by(:checksum => test[:id])
-			next if test_result
 
-			full_name = test[:classname]
-			name = test[:name]
-			r = full_name.rindex('.')
-			package = full_name[0..r-1]
-			class_name = full_name[r+1..full_name.length]
+		ActiveRecord::Base.transaction do
 
-			result = "pass"
-			result = "fail" if test.css("failure").any?
-			time = test[:time].to_f
+			tests.each do |test|
+				test_result = test_run.test_results.find_by(:checksum => test[:id])
+				next if test_result
 
-			test_record = create_test(package, class_name, name)
-			test_record.test_results.create(:result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id])
+				full_name = test[:classname]
+				name = test[:name]
+				r = full_name.rindex('.')
+				package = full_name[0..r-1]
+				class_name = full_name[r+1..full_name.length]
+
+				result = "pass"
+				result = "fail" if test.css("failure").any?
+				time = test[:time].to_f
+
+				test_record = create_test(package, class_name, name)
+				test_record.test_results.create(:result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id])
+			end
 		end
+
 		#End XML parsing
 
 		return [{:message => "sucess"}, :created]
