@@ -42,6 +42,8 @@ gulp.task('vendorJS', function() {
         './bower_components/angular/angular.js',
         './bower_components/angular-route/angular-route.js',
         './bower_components/angular-resource/angular-resource.js',
+        './bower_components/angular-bootstrap/ui-bootstrap.js',
+        './bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
         './bower_components/ng-grid/build/ng-grid.js'
     ])
         .pipe(plugins.concat('lib.js'))

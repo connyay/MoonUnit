@@ -9,10 +9,6 @@
                 templateUrl: 'components/UI/main-nav.html',
                 controller: function($scope) {
                     $scope.navItems = [{
-                        title: 'Dashboard',
-                        route: 'dashboard',
-                        icon: 'dashboard',
-                    }, {
                         title: 'Users',
                         icon: 'users',
                         route: 'users'
@@ -44,6 +40,18 @@
             return {
                 restrict: 'E',
                 templateUrl: 'components/UI/loading.html'
+            };
+        })
+        .directive('filter', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/filter.html'
+            };
+        })
+        .directive('refresh', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/refresh.html'
             };
         });
 })();

@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-lg-10 col-md-7 col-sm-6 col-xs-6">
+        <div class="btn-group">
+            <label class="btn btn-default btn-sm" ng-model="radioFilter" btn-radio="'all'">All</label>
+            <label class="btn btn-success btn-sm" ng-model="radioFilter" btn-radio="'pass'">Passed</label>
+            <label class="btn btn-danger btn-sm" ng-model="radioFilter" btn-radio="'fail'">Failed</label>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-5 col-sm-6 col-xs-6">
+        <input type="text" class="form-control input-sm" ng-model="filterOptions.filterText" placeholder="Filter">
+    </div>
+</div>
+<br>
+<loading ng-if="loading"></loading>
+<div class="test-results" ng-grid="gridOptions" ng-if="!loading"></div>
