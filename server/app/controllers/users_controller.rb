@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
 
+	protect_from_forgery :except => :create 
+	
 	def index 
-		users = User.includes(:test_runs).where("users.name <> 'rmauto@us.ibm.com'")
+		users = User.includes(:test_runs).where.not(:name => "rmauto@us.ibm.com")
 		render :json => users, :status => :ok
 	end
 
@@ -15,6 +17,16 @@ class UsersController < ApplicationController
 			render :json => {:error => "User #{params[:name]} not found"}, :status => :not_found
 		end
 
+	end
+
+	def create
+		user = User.new(:name => params[:name])
+
+		if user.save
+			head :created
+		else
+			render :json => {:errors => user.errors.full_messages}, :status => :bad_request
+		end
 	end
 
 	private
