@@ -1,6 +1,19 @@
 class UsersController < ApplicationController
 
 	protect_from_forgery :except => :create 
+
+
+	swagger_controller :users, "User Management"
+
+	swagger_api :index do
+	  summary "Fetches all User items"
+	  notes "This lists all the active users"
+	  param :query, :page, :integer, :optional, "Page number"
+	  response :unauthorized
+	  response :not_acceptable
+	  response :requested_range_not_satisfiable
+	end
+
 	
 	def index 
 		users = User.includes(:test_runs).where.not(:name => "rmauto@us.ibm.com")
