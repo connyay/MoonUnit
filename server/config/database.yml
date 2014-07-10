@@ -22,7 +22,8 @@ test:
 
 production:
   adapter: mysql2
-  pool: 5
+  pool: 10
+  wait_timeout: 2147483
   timeout: 5000
   host: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['hostname'] rescue 'localhost' %>
   port: <%= JSON.parse( ENV['VCAP_SERVICES'] )['mysql-5.5'].first['credentials']['port'] rescue 3306 %>
