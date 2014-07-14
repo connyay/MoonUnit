@@ -8,6 +8,6 @@ applications:
   host: moonunit
   path: ./server
   #buildpack: https://github.com/heroku/heroku-buildpack-ruby.git
-  buildpack: buildpack: https://github.com/ibmdb/db2rubybuildpack.git
+  buildpack: https://github.com/ibmdb/db2rubybuildpack.git
   services:
   - moonunit-db2
