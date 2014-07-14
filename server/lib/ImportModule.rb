@@ -19,8 +19,11 @@ module ImportModule
 		ActiveRecord::Base.transaction do
 
 			tests.each do |test|
-				test_result = test_run.test_results.find_by(:checksum => test[:id])
-				next if test_result
+				#If the test has a checksum, we need to verify its not a duplicate
+				unless test[:id].nil?
+					test_result = test_run.test_results.find_by(:checksum => test[:id])
+					next if test_result
+				end
 
 				full_name = test[:classname]
 				name = test[:name]
@@ -35,11 +38,15 @@ module ImportModule
 				test_record = create_test(package, class_name, name)
 
 				failure = test.css("failure")
+				error = test.css("error")
 				log = nil
 
 				if failure.any?
 					log = failure.text
 					result = "fail"
+				elsif error.any?
+					log = error.text
+					result = "error"
 				end
 
 				#ignore duplicate tests like licenseAvailability until I can find a better solution

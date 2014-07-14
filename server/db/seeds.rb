@@ -47,6 +47,7 @@ User.create(:name => "nrkruk@us.ibm.com")
 # t1 = Time.now.to_f
 # 50.times do
 # 	a = a + 1
+# 	puts "Creating build #{a}"
 # 	test_run = user.test_runs.create(:build_id => "testBuild#{a}")
 
 # 	4.times do 

@@ -6,14 +6,23 @@ class UsersController < ApplicationController
 	swagger_controller :users, "User Management"
 
 	swagger_api :index do
-	  summary "Fetches all User items"
-	  notes "This lists all the active users"
+	  summary "Gets all users and their builds"
+	  notes "This will return a alist of all users along with build ids"
 	  param :query, :page, :integer, :optional, "Page number"
-	  response :unauthorized
-	  response :not_acceptable
-	  response :requested_range_not_satisfiable
+	  response :ok
 	end
 
+	swagger_api :create do
+	  summary "Creates a user"
+	  param :form, :name, :User, :required, "User"
+	  response :created
+	  response :bad_request
+	end
+
+	swagger_model :User do
+		description "User model"
+		property :name, :string, :required, "Name"
+	end
 	
 	def index 
 		users = User.includes(:test_runs).where.not(:name => "rmauto@us.ibm.com")
