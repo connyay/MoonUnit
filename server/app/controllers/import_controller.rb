@@ -1,11 +1,13 @@
 require 'ImportModule'
+require 'UserModule'
 
 class ImportController < ApplicationController
 
 	protect_from_forgery :except => :create 
+	include UserModule
 	
 	def create
-		user = User.find_by(:name => params[:user_name])
+		user = fetchOrCreate(params[:user_name])
 		#optional
 		build_id = params[:build_id]
 
