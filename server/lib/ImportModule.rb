@@ -3,12 +3,21 @@ require 'net/http'
 
 module ImportModule
 
-	def self.import(user, raw_xml)
+	#if build id is null it will try to use the property latestGoodBuild
+	#if that fails it will use a timestamp
+	def self.import(user, raw_xml,build_id)
 
 		#XML parsing code
 		doc = Nokogiri::XML(raw_xml)
-		#try to get the build id from this property 
-		build = doc.css("property[name='latestGoodBuild']")[0][:value]
+		
+		#Get the build id from three places. Url params, xml property, or last resort generate one
+		if build_id.nil?
+			build_selector = doc.css("property[name='latestGoodBuild']")[0]
+			build = build_selector[:value] unless build_selector.nil?
+			build = Time.now.strftime("BUILD_%Y.%m.%d_%H.%M.%S") if build.nil?
+		else
+			build = build_id
+		end
 
 		#Use existing or create new build
 		test_run = user.test_runs.includes(test_results: [:test]).find_by(:build_id => build)
@@ -28,8 +37,15 @@ module ImportModule
 				full_name = test[:classname]
 				name = test[:name]
 				r = full_name.rindex('.')
-				package = full_name[0..r-1]
-				class_name = full_name[r+1..full_name.length]
+
+				#If there is no package, set the full name and use the default package
+				if r.nil?
+					package = Test.DEFAULT_PACKAGE
+					class_name = full_name
+				else
+					package = full_name[0..r-1] unless r.nil?
+					class_name = full_name[r+1..full_name.length]
+				end
 
 				result = "pass"
 				time = test[:time].to_f
@@ -59,12 +75,12 @@ module ImportModule
 
 		#End XML parsing
 
-		return [{:message => "sucess"}, :created]
+		return test_run
 	end
 
-	def self.importFromUrl(user, uri)
+	def self.importFromUrl(user, uri, build_id)
 		response = Net::HTTP.get(URI.parse(uri))
-		return import(user,response)
+		return import(user,response, build_id)
 	end
 
 	private 
