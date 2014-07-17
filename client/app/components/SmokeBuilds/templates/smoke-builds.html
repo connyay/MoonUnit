@@ -12,6 +12,7 @@
         <h4>
             <a ng-href="#/smoke-builds/{{test_run.id}}" ng-if="!test_run.locked">{{test_run.build_id}}</a>
             <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
+            <small> &mdash; {{test_run.created_at | date:'short'}}</small>
         </h4>
     </li>
     <li ng-if="!loading && !user.test_runs.length">No builds found</li>
