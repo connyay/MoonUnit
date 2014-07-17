@@ -9,19 +9,12 @@
 <loading ng-if="loading"></loading>
 <ul class="list-unstyled result-list" ng-if="!loading">
     <li ng-repeat="test_run in user.test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage">
-        <h4><a ng-href="#/smoke-builds/{{test_run.id}}">{{test_run.build_id}}</a>
+        <h4>
+            <a ng-href="#/smoke-builds/{{test_run.id}}" ng-if="!test_run.locked">{{test_run.build_id}}</a>
+            <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
         </h4>
     </li>
     <li ng-if="!loading && !user.test_runs.length">No builds found</li>
 </ul>
 
-<div class="text-center" ng-if="!loading && !filterText && pagination.numPages > 1">
-    <ul class="pagination">
-        <li ng-click="pagination.prevPage()" ng-class="{disabled: pagination.page === 0}"><a href>&laquo;</a>
-        </li>
-        <li ng-repeat="n in [] | range: pagination.numPages" ng-class="{active: n == pagination.page}"><a ng-click="pagination.toPageId(n)">{{n + 1}}</a>
-        </li>
-        <li ng-click="pagination.nextPage()" ng-class="{disabled: pagination.page + 1 >= pagination.numPages}"><a href>&raquo;</a>
-        </li>
-    </ul>
-</div>
+<moon-pager></moon-pager>

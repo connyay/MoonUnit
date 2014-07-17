@@ -15,7 +15,8 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination) {
+        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
+            var attempts = 0;
             $scope.loading = true;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
@@ -25,6 +26,17 @@
                     $scope.loading = false;
                     $scope.user = user;
                     $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
+                    if (user.test_runs.some(function(run) {
+                        return run.locked;
+                    })) {
+                        if (attempts < 30) {
+                            $timeout(function() {
+                                getUser();
+                            }, 1500);
+                        }
+                    } else {
+                        attempts = 0;
+                    }
                 });
             };
             getUser();

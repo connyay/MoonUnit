@@ -2,7 +2,8 @@
     'use strict';
 
     angular.module('moonunit.smokebuilds.controllers', [])
-        .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination) {
+        .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
+            var attempts = 0;
             $scope.loading = true;
             $scope.pagination = Pagination.getNew(15);
             var getBuilds = function() {
@@ -12,6 +13,17 @@
                     $scope.loading = false;
                     $scope.user = user;
                     $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
+                    if (user.test_runs.some(function(run) {
+                        return run.locked;
+                    })) {
+                        if (attempts < 30) {
+                            $timeout(function() {
+                                getBuilds();
+                            }, 1500);
+                        }
+                    } else {
+                        attempts = 0;
+                    }
                 });
             };
             getBuilds();
