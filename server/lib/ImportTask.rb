@@ -1,11 +1,30 @@
 require 'nokogiri'
 require 'net/http'
 
-module ImportModule
+class ImportTask
+
+	def initialize(task_params)
+		@task_params = task_params
+	end
+
+	def run
+		user = @task_params[:user]
+		raw_xml = @task_params[:raw_xml]
+		build_id = @task_params[:build_id]
+		location = @task_params[:location]
+
+		Spawnling.new do
+			if location
+				importFromUrl(user,location,build_id)
+			else
+				import(user,raw_xml,build_id)
+			end
+		end
+	end
 
 	#if build id is null it will try to use the property latestGoodBuild
 	#if that fails it will use a timestamp
-	def self.import(user, raw_xml,build_id)
+	def import(user, raw_xml,build_id)
 
 		#XML parsing code
 		doc = Nokogiri::XML(raw_xml)
@@ -78,14 +97,14 @@ module ImportModule
 		return test_run
 	end
 
-	def self.importFromUrl(user, uri, build_id)
+	def importFromUrl(user, uri, build_id)
 		response = Net::HTTP.get(URI.parse(uri))
 		return import(user,response, build_id)
 	end
 
 	private 
 
-	def self.create_test(package, class_name, name)
+	def create_test(package, class_name, name)
 		test = Test.find_by(:package => package, :class_name => class_name, :name => name)
 		if not test
 			test = Test.create(:package => package, :class_name => class_name, :name => name)

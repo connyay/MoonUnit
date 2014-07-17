@@ -1,4 +1,4 @@
-require 'ImportModule'
+require 'ImportTask'
 require 'UserModule'
 
 class ImportController < ApplicationController
@@ -7,21 +7,21 @@ class ImportController < ApplicationController
 	include UserModule
 	
 	def create
-		user = fetchOrCreate(params[:user_name])
+
+		task_params = {}
+
+		task_params[:user] = fetchOrCreate(params[:user_name])
 		#optional
-		build_id = params[:build_id]
+		task_params[:build_id] = params[:build_id]
 
-		location = request.headers[:location]
-		if location
-			test_run = ImportModule.importFromUrl(user, location, build_id)
-		else
-			test_run = ImportModule.import(user,request.body.read, build_id)
+		task_params[:location] = request.headers[:location]
+
+		if not location
+			task_params[:raw_xml] = request.body.read
 		end
 
-		if not test_run.errors.any?
-			render :json => {:message => "sucess"}, :status => :created, :location => url_for(controller: 'test_runs', action: 'show', id: test_run.id)
-		else
-			render :json => {:errors => test_run.errors.full_messages}, :status => :bad_request
-		end
+		ImportTask.new(task_params).run
+
+		head :accepted
 	end
 end

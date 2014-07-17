@@ -5,17 +5,17 @@ class TestRunsController < ApplicationController
 	rescue_from ActiveRecord::RecordNotFound , :with => :not_found
 
 	def index
-		@test_runs = TestRun.all
+		test_runs = TestRun.all
 	end
 
 	def show
 		#Category.includes(posts: [{ comments: :guest }, :tags]).find(1)
-		@test_run = TestRun.includes(test_results: [:test]).find(params[:id])
+		test_run = TestRun.includes(test_results: [:test]).find(params[:id])
 		time1 = Time.now
 
 		respond_to do |format|
-			format.xml{render :xml => buildXmlReport(@test_run), :status => :ok}
-			format.any(:html, :json) {render :json => @test_run, :status => :ok}
+			format.xml{render :xml => buildXmlReport(test_run), :status => :ok}
+			format.any(:html, :json) {render :json => test_run, :status => :ok}
 		end
 		
 	end

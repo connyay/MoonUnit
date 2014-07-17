@@ -25,11 +25,13 @@ gem 'nokogiri'
 
 gem 'active_model_serializers'
 
-gem 'swagger-docs'
-
 group :production do
 	gem 'ibm_db'
 end
+
+gem 'puma'
+
+gem 'spawnling', '~>2.1'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
