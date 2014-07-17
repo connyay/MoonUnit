@@ -8,7 +8,7 @@
             $scope.pagination = Pagination.getNew(15);
             var getBuilds = function() {
                 Data.user({
-                    username: 'rmauto@us.ibm.com'
+                    username: 'rmauto'
                 }, function(user) {
                     $scope.loading = false;
                     $scope.user = user;
@@ -35,7 +35,7 @@
             $scope.loading = true;
             var getBuild = function() {
                 Data.testRuns({
-                    username: 'rmauto@us.ibm.com',
+                    username: 'rmauto',
                     id: $routeParams.id
                 }, function(smokeBuild) {
                     $scope.loading = false;

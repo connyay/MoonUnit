@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 	protect_from_forgery :except => :create 
 	
 	def index 
-		users = User.includes(:test_runs).where.not(:name => "rmauto@us.ibm.com")
+		users = User.includes(:test_runs).where.not(:name => "rmauto")
 		render :json => users, :status => :ok
 	end
 
