@@ -37,6 +37,13 @@
                         $scope.passed = pass;
                         $scope.failed = fail;
                         $scope.total = total;
+                        if (!$scope.loading && !$scope.staticTotals) {
+                            $scope.staticTotals = {
+                                passed: pass,
+                                failed: fail,
+                                total: total
+                            };
+                        }
                     });
                     $scope.filterOptions = {
                         filterText: ''
