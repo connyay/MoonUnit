@@ -35,6 +35,6 @@
             $scope.refresh = function() {
                 getBuild();
             };
-        })
+        });
 
 })();

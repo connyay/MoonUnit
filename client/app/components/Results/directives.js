@@ -43,16 +43,28 @@
                     };
 
                     $scope.aggregate = function(row) {
-                        if (row.field === 'package') {
+                        if (row.field === 'package' || row.field === 'class_name') {
                             var pass = 0,
                                 fail = 0,
                                 i = 0,
+                                j = 0,
                                 length = row.children.length;
                             for (i = 0; i < length; i++) {
                                 if (row.children[i].entity.result === 'pass') {
                                     pass++;
                                 } else {
                                     fail++;
+                                }
+                            }
+                            length = row.aggChildren.length;
+                            for (i = 0; i < length; i++) {
+                                var aggLength = row.aggChildren[i].children.length;
+                                for (j = 0; j < aggLength; j++) {
+                                    if (row.aggChildren[i].children[j].entity.result === 'pass') {
+                                        pass++;
+                                    } else {
+                                        fail++;
+                                    }
                                 }
                             }
                             return pass + ' Passed | ' + fail + ' Failed';
