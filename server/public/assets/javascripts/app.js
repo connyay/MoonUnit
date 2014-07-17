@@ -79,13 +79,21 @@
                     };
 
                     $scope.aggregate = function(row) {
-                        if (row.field === 'package') {
+                        if (row.field === 'package' || row.field === 'class_name') {
                             var pass = 0,
                                 fail = 0,
                                 i = 0,
                                 length = row.children.length;
                             for (i = 0; i < length; i++) {
                                 if (row.children[i].entity.result === 'pass') {
+                                    pass++;
+                                } else {
+                                    fail++;
+                                }
+                            }
+                            length = row.aggChildren.length;
+                            for (i = 0; i < length; i++) {
+                                if (row.aggChildren[i].entity.result === 'pass') {
                                     pass++;
                                 } else {
                                     fail++;
@@ -169,7 +177,7 @@
             $scope.refresh = function() {
                 getBuild();
             };
-        })
+        });
 
 })();
 (function() {
