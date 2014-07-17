@@ -1,0 +1,23 @@
+<loading ng-if="loading"></loading>
+<ul class="list-unstyled" ng-if="!loading">
+    <li ng-repeat="test_run in user.test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage">
+        <h4>
+            <span ng-if="!test_run.locked">
+                <span class="dropdown" on-toggle="toggled(open)">
+                    <button type="button" class="btn btn-link btn-xs dropdown-toggle"><i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href><i class="fa fa-pencil"></i> Edit</a>
+                        </li>
+                        <li><a href ng-click="deleteRun(test_run)"><i class="fa fa-trash-o"></i> Delete</a>
+                        </li>
+                    </ul>
+                </span>
+                <a ng-href="#/{{hrefPrefix}}/{{user.name}}/test_runs/{{test_run.id}}">{{test_run.build_id}}</a>
+            </span>
+            <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
+            <small>({{test_run.created_at | date:'short'}})</small>
+        </h4>
+    </li>
+    <li ng-if="!loading && !user.test_runs.length">No builds found</li>
+</ul>

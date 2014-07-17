@@ -5,6 +5,7 @@
         .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
+            $scope.hrefPrefix = 'smoke-builds';
             $scope.pagination = Pagination.getNew(15);
             var getBuilds = function() {
                 Data.user({

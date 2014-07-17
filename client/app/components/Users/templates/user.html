@@ -12,16 +12,6 @@
 
 <filter></filter>
 
-<loading ng-if="loading"></loading>
-<ul class="list-unstyled" ng-if="!loading">
-    <li ng-repeat="test_run in user.test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage">
-        <h4>
-            <a ng-href="#/users/{{user.name}}/test_runs/{{test_run.id}}" ng-if="!test_run.locked">{{test_run.build_id}}</a>
-            <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
-            <small> &mdash; {{test_run.created_at | date:'short'}}</small>
-        </h4>
-    </li>
-    <li ng-if="!loading && !user.test_runs.length">No builds found</li>
-</ul>
+<results-list></results-list>
 
 <moon-pager></moon-pager>

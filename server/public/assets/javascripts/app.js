@@ -149,6 +149,13 @@
 
                 }
             };
+        })
+        .directive('resultsList', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/Results/templates/results-list.html',
+                controller: function($scope, $filter) {}
+            };
         });
 })();
 (function() {
@@ -158,6 +165,7 @@
         .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
+            $scope.hrefPrefix = 'smoke-builds';
             $scope.pagination = Pagination.getNew(15);
             var getBuilds = function() {
                 Data.user({
@@ -306,6 +314,7 @@
         .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
+            $scope.hrefPrefix = 'users';
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
                 Data.user({

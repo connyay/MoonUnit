@@ -113,5 +113,12 @@
 
                 }
             };
+        })
+        .directive('resultsList', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/Results/templates/results-list.html',
+                controller: function($scope, $filter) {}
+            };
         });
 })();
