@@ -22,6 +22,7 @@ class ImportTask
 		end
 	end
 
+	private
 	#if build id is null it will try to use the property latestGoodBuild
 	#if that fails it will use a timestamp
 	def import(user, raw_xml,build_id)
@@ -110,8 +111,6 @@ class ImportTask
 		response = Net::HTTP.get(URI.parse(uri))
 		return import(user,response, build_id)
 	end
-
-	private 
 
 	def create_test(package, class_name, name)
 		test = Test.find_by(:package => package, :class_name => class_name, :name => name)

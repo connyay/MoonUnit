@@ -19,6 +19,16 @@ class UsersController < ApplicationController
 
 	end
 
+	def destroy
+		user = User.find_by(:name => params[:name])
+		if user
+			user.destroy
+			head :ok
+		else
+			head :not_found
+		end
+	end
+
 	def create
 		user = User.new(:name => params[:name])
 
