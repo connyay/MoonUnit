@@ -51,6 +51,12 @@
                 templateUrl: 'components/UI/filter.html'
             };
         })
+        .directive('moonPager', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/moon-pager.html'
+            };
+        })
         .directive('refresh', function() {
             return {
                 restrict: 'E',
