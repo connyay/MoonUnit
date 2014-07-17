@@ -20,6 +20,16 @@ class TestRunsController < ApplicationController
 		
 	end
 
+	def update
+		test_run = TestRun.find(params[:id])
+		if test_run.update(:build_id => params[:build_id])
+			head :ok
+		else
+			render :json => {errors: test_run.errors.full_messages}, :status => :bad_request
+		end
+
+	end
+
 	def destroy 
 		test_run = TestRun.find(params[:id]).destroy
 		head :ok
