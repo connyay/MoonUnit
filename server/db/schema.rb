@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709030452) do
+ActiveRecord::Schema.define(version: 20140717191014) do
 
   create_table "test_results", force: true do |t|
     t.integer  "test_id"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20140709030452) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.boolean  "locked",       default: false
   end
 
   create_table "tests", force: true do |t|

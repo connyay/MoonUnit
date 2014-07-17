@@ -40,7 +40,12 @@ class ImportTask
 
 		#Use existing or create new build
 		test_run = user.test_runs.includes(test_results: [:test]).find_by(:build_id => build)
-		test_run = user.test_runs.create(:build_id => build) if not test_run
+		if not test_run
+			test_run = user.test_runs.create(:build_id => build, :locked => true)
+		else
+			test_run.locked = true
+			test_run.save
+		end
 
 		tests = doc.css("testcase")
 
@@ -91,6 +96,10 @@ class ImportTask
 
 			end
 		end
+
+		#unlock
+		test_run.locked = false
+		test_run.save
 
 		#End XML parsing
 
