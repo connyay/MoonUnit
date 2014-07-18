@@ -18,7 +18,7 @@
         .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
-            $scope.hrefPrefix = 'users';
+            $scope.isSmoke = false;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
                 Data.user({
@@ -26,7 +26,8 @@
                 }, function(user) {
                     $scope.loading = false;
                     $scope.user = user;
-                    $scope.pagination.numPages = Math.ceil($scope.user.test_runs.length / $scope.pagination.perPage);
+                    $scope.test_runs = user.test_runs;
+                    $scope.pagination.numPages = Math.ceil($scope.test_runs.length / $scope.pagination.perPage);
                     if (user.test_runs.some(function(run) {
                         return run.locked;
                     })) {
@@ -43,6 +44,15 @@
             getUser();
             $scope.refresh = function() {
                 getUser();
+            };
+
+            $scope.deleteRun = function(test_run) {
+                Data.deleteRun({
+                    username: $routeParams.username,
+                    id: test_run.id
+                }, function() {
+                    $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
+                });
             };
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {

@@ -17,6 +17,10 @@
                         method: 'GET',
                         cache: true
                     },
+                    'deleteRun': {
+                        url: '/users/:username/test_runs/:id',
+                        method: 'DELETE'
+                    }
                 });
             }
         ]);

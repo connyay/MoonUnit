@@ -118,7 +118,33 @@
             return {
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-list.html',
-                controller: function($scope, $filter) {}
+                controller: function($scope, $modal) {
+                    $scope.delete = function(test_run) {
+
+                        var modalInstance = $modal.open({
+                            templateUrl: 'result-list-modal.html',
+                            controller: function($scope, $modalInstance, test_run) {
+                                $scope.test_run = test_run;
+                                $scope.ok = function() {
+                                    $modalInstance.close(test_run);
+                                };
+                                $scope.cancel = function() {
+                                    $modalInstance.dismiss('cancel');
+                                };
+                            },
+                            size: 'sm',
+                            resolve: {
+                                'test_run': function() {
+                                    return test_run;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(test_run) {
+                            $scope.deleteRun(test_run);
+                        });
+                    };
+                }
             };
         });
 })();
