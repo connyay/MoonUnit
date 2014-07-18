@@ -53,9 +53,12 @@ MoonUnit::Application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
-  config.cache_store = :dalli_store
   credentials = JSON.parse( ENV['VCAP_SERVICES'] )['memcachedcloud'].first['credentials']
-  config.identity_cache_store = :dalli_store, Dalli::Client.new(:servers => credentials.servers, :username => credentials.username, :password => credentials.password)
+  config.cache_store = :dalli_store, credentials['servers'], {
+    :username => credentials['username'],
+    :password => credentials['password'],
+    :compress => true
+  }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"

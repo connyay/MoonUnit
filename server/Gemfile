@@ -32,6 +32,7 @@ end
 gem 'puma'
 
 gem 'dalli'
+gem 'kgio', '~> 2.9.2'
 
 gem 'spawnling', '~>2.1'
 

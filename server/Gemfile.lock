@@ -39,6 +39,7 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     json (1.8.1)
+    kgio (2.9.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -102,6 +103,7 @@ DEPENDENCIES
   dalli
   ibm_db
   jbuilder (~> 2.0)
+  kgio (~> 2.9.2)
   nokogiri
   puma
   rails (= 4.0)
