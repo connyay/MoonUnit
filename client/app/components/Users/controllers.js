@@ -54,6 +54,9 @@
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.getPrefix = function() {
+                return 'users/' + $routeParams.username + '/test_runs';
+            };
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
             $scope.user = $routeParams.username;

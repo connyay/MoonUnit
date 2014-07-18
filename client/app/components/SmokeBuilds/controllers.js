@@ -40,6 +40,9 @@
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.getPrefix = function() {
+                return 'smoke-builds';
+            };
         })
         .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
             $scope.loading = true;

@@ -230,6 +230,9 @@
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.getPrefix = function() {
+                return 'smoke-builds';
+            };
         })
         .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
             $scope.loading = true;
@@ -331,6 +334,40 @@
                 restrict: 'E',
                 templateUrl: 'components/UI/refresh.html'
             };
+        })
+        .directive("inlineEdit", function() {
+            var editorTemplate = '<span ng-transclude ng-hide="view.editorEnabled"></span>' +
+                '<span ng-show="view.editorEnabled">' +
+                '<input ng-model="view.editableValue">' +
+                '<a href ng-click="save()" title="Save"><i class="fa fa-save"></i></a>' +
+                '<a href ng-click="disableEditor()" title="Cancel"><i class="fa fa-undo"></i></a>' +
+                '</span>';
+
+            return {
+                restrict: "E",
+                transclude: true,
+                template: editorTemplate,
+                controller: function($scope) {
+                    $scope.view = {
+                        editableValue: $scope.value,
+                        editorEnabled: false
+                    };
+
+                    $scope.enableEditor = function(value) {
+                        $scope.view.editorEnabled = true;
+                        $scope.view.editableValue = value;
+                    };
+
+                    $scope.disableEditor = function() {
+                        $scope.view.editorEnabled = false;
+                    };
+
+                    $scope.save = function() {
+                        $scope.value = $scope.view.editableValue;
+                        $scope.disableEditor();
+                    };
+                }
+            };
         });
 })();
 (function() {
@@ -388,6 +425,9 @@
                 }, function() {
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
+            };
+            $scope.getPrefix = function() {
+                return 'users/' + $routeParams.username + '/test_runs';
             };
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
