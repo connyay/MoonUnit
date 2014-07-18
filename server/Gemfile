@@ -27,12 +27,12 @@ gem 'active_model_serializers'
 
 group :production do
 	gem 'ibm_db'
+	gem 'dalli'
+	gem 'kgio', '~> 2.9.2'
 end
 
 gem 'puma'
 
-gem 'dalli'
-gem 'kgio', '~> 2.9.2'
 
 gem 'spawnling', '~>2.1'
 

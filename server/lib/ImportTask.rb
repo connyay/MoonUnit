@@ -102,6 +102,9 @@ class ImportTask
 		test_run.locked = false
 		test_run.save
 
+		#Invalidate cache
+		Rails.cache.delete "test-run-#{test_run.id}"
+
 		#End XML parsing
 
 		return test_run
