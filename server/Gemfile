@@ -31,8 +31,7 @@ group :production do
 	gem 'kgio', '~> 2.9.2'
 end
 
-gem 'puma'
-
+gem 'unicorn'
 
 gem 'spawnling', '~>2.1'
 
