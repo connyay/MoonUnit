@@ -21,7 +21,7 @@
                         if (attempts < 30) {
                             $timeout(function() {
                                 getBuilds();
-                            }, 1500);
+                            }, 3000);
                         }
                     } else {
                         attempts = 0;

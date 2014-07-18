@@ -34,7 +34,7 @@
                         if (attempts < 30) {
                             $timeout(function() {
                                 getUser();
-                            }, 1500);
+                            }, 3000);
                         }
                     } else {
                         attempts = 0;
