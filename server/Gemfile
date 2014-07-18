@@ -29,9 +29,8 @@ group :production do
 	gem 'ibm_db'
 	gem 'dalli'
 	gem 'kgio', '~> 2.9.2'
+	gem 'unicorn'
 end
-
-gem 'unicorn'
 
 gem 'spawnling', '~>2.1'
 
