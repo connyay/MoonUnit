@@ -31,6 +31,8 @@ end
 
 gem 'puma'
 
+gem 'dalli'
+
 gem 'spawnling', '~>2.1'
 
 # Use ActiveModel has_secure_password

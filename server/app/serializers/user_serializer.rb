@@ -1,4 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
+	cached
 	attributes :name, :test_runs
 
 	def test_runs
@@ -9,5 +10,9 @@ class UserSerializer < ActiveModel::Serializer
 		end
 
 		runs
+	end
+
+	def cache_key
+		object.cache_key
 	end
 end

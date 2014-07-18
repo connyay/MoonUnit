@@ -10,19 +10,19 @@ class TestRunsController < ApplicationController
 
 	def show
 		#Category.includes(posts: [{ comments: :guest }, :tags]).find(1)
-		test_run = TestRun.includes(test_results: [:test]).find(params[:id])
-		time1 = Time.now
-
+		test_run = Rails.cache.fetch "test-run-#{params[:id]}" do
+			TestRun.includes(test_results: [:test]).find(params[:id])
+		end
 		respond_to do |format|
 			format.xml{render :xml => buildXmlReport(test_run), :status => :ok}
 			format.any(:html, :json) {render :json => test_run, :status => :ok}
 		end
-		
 	end
 
 	def update
 		test_run = TestRun.find(params[:id])
 		if test_run.update(:build_id => params[:build_id])
+			Rails.cache.delete "test-run-#{params[:id]}"
 			head :ok
 		else
 			render :json => {errors: test_run.errors.full_messages}, :status => :bad_request
