@@ -10,6 +10,41 @@
         });
 
 })();
+
+window.__ = {
+    debounce: function(func, wait, immediate) {
+        var timeout, args, context, timestamp, result;
+
+        var later = function() {
+            var last = Date.now - timestamp;
+            if (last < wait) {
+                timeout = setTimeout(later, wait - last);
+            } else {
+                timeout = null;
+                if (!immediate) {
+                    result = func.apply(context, args);
+                    context = args = null;
+                }
+            }
+        };
+
+        return function() {
+            context = this;
+            args = arguments;
+            timestamp = Date.now;
+            var callNow = immediate && !timeout;
+            if (!timeout) {
+                timeout = setTimeout(later, wait);
+            }
+            if (callNow) {
+                result = func.apply(context, args);
+                context = args = null;
+            }
+
+            return result;
+        };
+    }
+};
 (function() {
     'use strict';
     angular.module('moonunit.data', ['ngResource'])
@@ -193,13 +228,13 @@
 (function() {
     'use strict';
     var smokeBuildUser = 'rmauto';
-    angular.module('moonunit.smokebuilds.controllers', [])
+    angular.module('moonunit.smokebuilds.controllers', ['windowEventBroadcasts'])
         .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
             $scope.isSmoke = true;
             $scope.pagination = Pagination.getNew(15);
-            var getBuilds = function() {
+            var getBuilds = __.debounce(function() {
                 Data.user({
                     username: smokeBuildUser
                 }, function(user) {
@@ -213,13 +248,13 @@
                         if (attempts < 30) {
                             $timeout(function() {
                                 getBuilds();
-                            }, 3000);
+                            }, 3001);
                         }
                     } else {
                         attempts = 0;
                     }
                 });
-            };
+            }, 3000, true);
             getBuilds();
             $scope.refresh = function() {
                 getBuilds();
@@ -245,10 +280,16 @@
             $scope.getPrefix = function() {
                 return 'smoke-builds';
             };
+            $scope.$on('$windowFocus', function() {
+                getBuilds();
+            });
+            $scope.$on('$windowShow', function() {
+                getBuilds();
+            });
         })
         .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
             $scope.loading = true;
-            var getBuild = function() {
+            var getBuild = __.debounce(function() {
                 Data.testRuns({
                     username: smokeBuildUser,
                     id: $routeParams.id
@@ -257,11 +298,17 @@
                     $scope.smokeBuild = smokeBuild;
                     $scope.data = $scope.initData = smokeBuild.test_results;
                 });
-            };
+            }, 10000, true);
             getBuild();
             $scope.refresh = function() {
                 getBuild();
             };
+            $scope.$on('$windowFocus', function() {
+                getBuild();
+            });
+            $scope.$on('$windowShow', function() {
+                getBuild();
+            });
         });
 
 })();
@@ -397,7 +444,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'windowEventBroadcasts'])
         .controller('ListUsersCtrl', function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
@@ -417,7 +464,7 @@
             $scope.loading = true;
             $scope.isSmoke = false;
             $scope.pagination = Pagination.getNew(15);
-            var getUser = function() {
+            var getUser = __.debounce(function() {
                 Data.user({
                     username: username
                 }, function(user) {
@@ -437,7 +484,7 @@
                         attempts = 0;
                     }
                 });
-            };
+            }, 3000, true);
             getUser();
             $scope.refresh = function() {
                 getUser();
@@ -464,11 +511,17 @@
             $scope.getPrefix = function() {
                 return 'users/' + username + '/test_runs';
             };
+            $scope.$on('$windowFocus', function() {
+                getUser();
+            });
+            $scope.$on('$windowShow', function() {
+                getUser();
+            });
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
             $scope.user = $routeParams.username;
             $scope.loading = true;
-            var getResult = function() {
+            var getResult = __.debounce(function() {
                 Data.testRuns({
                     username: $routeParams.username,
                     id: $routeParams.id
@@ -477,11 +530,17 @@
                     $scope.result = result;
                     $scope.data = $scope.initData = result.test_results;
                 });
-            };
+            }, 10000, true);
             getResult();
             $scope.refresh = function() {
                 getResult();
             };
+            $scope.$on('$windowFocus', function() {
+                getResult();
+            });
+            $scope.$on('$windowShow', function() {
+                getResult();
+            });
         });
 
 })();

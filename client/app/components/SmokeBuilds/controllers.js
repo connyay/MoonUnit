@@ -1,13 +1,13 @@
 (function() {
     'use strict';
     var smokeBuildUser = 'rmauto';
-    angular.module('moonunit.smokebuilds.controllers', [])
+    angular.module('moonunit.smokebuilds.controllers', ['windowEventBroadcasts'])
         .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
             var attempts = 0;
             $scope.loading = true;
             $scope.isSmoke = true;
             $scope.pagination = Pagination.getNew(15);
-            var getBuilds = function() {
+            var getBuilds = __.debounce(function() {
                 Data.user({
                     username: smokeBuildUser
                 }, function(user) {
@@ -21,13 +21,13 @@
                         if (attempts < 30) {
                             $timeout(function() {
                                 getBuilds();
-                            }, 3000);
+                            }, 3001);
                         }
                     } else {
                         attempts = 0;
                     }
                 });
-            };
+            }, 3000, true);
             getBuilds();
             $scope.refresh = function() {
                 getBuilds();
@@ -53,10 +53,16 @@
             $scope.getPrefix = function() {
                 return 'smoke-builds';
             };
+            $scope.$on('$windowFocus', function() {
+                getBuilds();
+            });
+            $scope.$on('$windowShow', function() {
+                getBuilds();
+            });
         })
         .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
             $scope.loading = true;
-            var getBuild = function() {
+            var getBuild = __.debounce(function() {
                 Data.testRuns({
                     username: smokeBuildUser,
                     id: $routeParams.id
@@ -65,11 +71,17 @@
                     $scope.smokeBuild = smokeBuild;
                     $scope.data = $scope.initData = smokeBuild.test_results;
                 });
-            };
+            }, 10000, true);
             getBuild();
             $scope.refresh = function() {
                 getBuild();
             };
+            $scope.$on('$windowFocus', function() {
+                getBuild();
+            });
+            $scope.$on('$windowShow', function() {
+                getBuild();
+            });
         });
 
 })();

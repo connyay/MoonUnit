@@ -45,7 +45,8 @@ gulp.task('vendorJS', function() {
         './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
         './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
         './bower_components/ng-grid/build/ng-grid.js',
-        './bower_components/ng-simplePagination/simplePagination.js'
+        './bower_components/ng-simplePagination/simplePagination.js',
+        './bower_components/angular-window-events/window_event_broadcasts.js'
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())
