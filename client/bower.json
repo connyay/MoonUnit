@@ -20,7 +20,7 @@
         "jquery": "1.10",
         "strapless": "~3.1.1",
         "ng-grid": "~2.0.11",
-        "angular-bootstrap": "~0.11.0",
+        "angular-bootstrap": "git@github.com:connyay/bootstrap.git#gh-pages",
         "ng-simplePagination": "*"
     },
     "resolutions": {

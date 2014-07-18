@@ -15,13 +15,13 @@
     <li ng-repeat="test_run in test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage">
         <h4>
             <span ng-if="!test_run.locked">
-                <span class="dropdown" on-toggle="toggled(open)">
+                <span class="dropdown" ng-hide="view.editorEnabled">
                     <button type="button" class="btn btn-link btn-xs dropdown-toggle"><i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href ng-click="enableEditor(test_run.build_id)"><i class="fa fa-pencil"></i> Edit</a>
+                        <li><a href ng-click="edit(test_run, test_run.build_id)"><i class="fa fa-pencil"></i> Edit</a>
                         </li>
-                        <li><a href ng-click="delete(test_run)"><i class="fa fa-trash-o"></i> Delete</a>
+                        <li><a href ng-click="delete(test_run, $event)"><i class="fa fa-trash-o"></i> Delete</a>
                         </li>
                     </ul>
                 </span>
@@ -29,7 +29,7 @@
                 </inline-edit>
             </span>
             <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
-            <small>({{test_run.created_at | date:'short'}})</small>
+            <small ng-hide="view.editorEnabled">({{test_run.created_at | date:'short'}})</small>
         </h4>
     </li>
     <li ng-if="!loading && !user.test_runs.length">No builds found</li>

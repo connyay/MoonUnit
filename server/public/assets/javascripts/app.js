@@ -26,12 +26,15 @@
                     },
                     'testRuns': {
                         url: '/users/:username/test_runs/:id',
-                        method: 'GET',
-                        cache: true
+                        method: 'GET'
                     },
                     'deleteRun': {
                         url: '/users/:username/test_runs/:id',
                         method: 'DELETE'
+                    },
+                    'updateRun': {
+                        url: '/users/:username/test_runs/:id',
+                        method: 'PUT'
                     }
                 });
             }
@@ -159,8 +162,7 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-list.html',
                 controller: function($scope, $modal) {
-                    $scope.delete = function(test_run) {
-
+                    $scope.delete = function(test_run, ev) {
                         var modalInstance = $modal.open({
                             templateUrl: 'result-list-modal.html',
                             controller: function($scope, $modalInstance, test_run) {
@@ -228,6 +230,16 @@
                     id: test_run.id
                 }, function() {
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
+                });
+            };
+            $scope.saveEdit = function(test_run, value) {
+                return Data.updateRun({
+                    username: smokeBuildUser,
+                    id: test_run.id
+                }, {
+                    'build_id': value
+                }, function() {
+                    test_run.build_id = value;
                 });
             };
             $scope.getPrefix = function() {
@@ -336,26 +348,28 @@
             };
         })
         .directive("inlineEdit", function() {
-            var editorTemplate = '<span ng-transclude ng-hide="view.editorEnabled"></span>' +
-                '<span ng-show="view.editorEnabled">' +
-                '<input ng-model="view.editableValue">' +
-                '<a href ng-click="save()" title="Save"><i class="fa fa-save"></i></a>' +
-                '<a href ng-click="disableEditor()" title="Cancel"><i class="fa fa-undo"></i></a>' +
-                '</span>';
-
             return {
                 restrict: "E",
                 transclude: true,
-                template: editorTemplate,
+                templateUrl: 'components/UI/inline-edit.html',
+                link: function($scope, $element, $attrs) {
+                    var $$element = $($element);
+                    $scope.$watch('view.editorEnabled', function(newValue) {
+                        if (newValue) {
+                            $('.inline-editor', $$element).select().focus();
+                        }
+                    });
+                },
                 controller: function($scope) {
-                    $scope.view = {
+                    $scope.view = $scope.$parent.view = {
                         editableValue: $scope.value,
                         editorEnabled: false
                     };
 
-                    $scope.enableEditor = function(value) {
+                    $scope.edit = function(model, value) {
+                        $scope.model = model;
                         $scope.view.editorEnabled = true;
-                        $scope.view.editableValue = value;
+                        $scope.view.value = value;
                     };
 
                     $scope.disableEditor = function() {
@@ -363,8 +377,18 @@
                     };
 
                     $scope.save = function() {
-                        $scope.value = $scope.view.editableValue;
-                        $scope.disableEditor();
+                        $scope.saveEdit($scope.model, $scope.view.value).$promise.then(function() {
+                            $scope.disableEditor();
+                        });
+                    };
+
+                    $scope.handleKeyDown = function(event) {
+                        if (event.keyCode === 27) {
+                            $scope.disableEditor();
+                        }
+                        if (event.keyCode === 13) {
+                            $scope.save();
+                        }
                     };
                 }
             };
@@ -389,12 +413,13 @@
         })
         .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
             var attempts = 0;
+            var username = $routeParams.username;
             $scope.loading = true;
             $scope.isSmoke = false;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
                 Data.user({
-                    username: $routeParams.username
+                    username: username
                 }, function(user) {
                     $scope.loading = false;
                     $scope.user = user;
@@ -420,14 +445,24 @@
 
             $scope.deleteRun = function(test_run) {
                 Data.deleteRun({
-                    username: $routeParams.username,
+                    username: username,
                     id: test_run.id
                 }, function() {
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.saveEdit = function(test_run, value) {
+                return Data.updateRun({
+                    username: username,
+                    id: test_run.id
+                }, {
+                    'build_id': value
+                }, function() {
+                    test_run.build_id = value;
+                });
+            };
             $scope.getPrefix = function() {
-                return 'users/' + $routeParams.username + '/test_runs';
+                return 'users/' + username + '/test_runs';
             };
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {

@@ -14,12 +14,15 @@
                     },
                     'testRuns': {
                         url: '/users/:username/test_runs/:id',
-                        method: 'GET',
-                        cache: true
+                        method: 'GET'
                     },
                     'deleteRun': {
                         url: '/users/:username/test_runs/:id',
                         method: 'DELETE'
+                    },
+                    'updateRun': {
+                        url: '/users/:username/test_runs/:id',
+                        method: 'PUT'
                     }
                 });
             }

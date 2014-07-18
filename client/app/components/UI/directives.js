@@ -64,26 +64,28 @@
             };
         })
         .directive("inlineEdit", function() {
-            var editorTemplate = '<span ng-transclude ng-hide="view.editorEnabled"></span>' +
-                '<span ng-show="view.editorEnabled">' +
-                '<input ng-model="view.editableValue">' +
-                '<a href ng-click="save()" title="Save"><i class="fa fa-save"></i></a>' +
-                '<a href ng-click="disableEditor()" title="Cancel"><i class="fa fa-undo"></i></a>' +
-                '</span>';
-
             return {
                 restrict: "E",
                 transclude: true,
-                template: editorTemplate,
+                templateUrl: 'components/UI/inline-edit.html',
+                link: function($scope, $element, $attrs) {
+                    var $$element = $($element);
+                    $scope.$watch('view.editorEnabled', function(newValue) {
+                        if (newValue) {
+                            $('.inline-editor', $$element).select().focus();
+                        }
+                    });
+                },
                 controller: function($scope) {
-                    $scope.view = {
+                    $scope.view = $scope.$parent.view = {
                         editableValue: $scope.value,
                         editorEnabled: false
                     };
 
-                    $scope.enableEditor = function(value) {
+                    $scope.edit = function(model, value) {
+                        $scope.model = model;
                         $scope.view.editorEnabled = true;
-                        $scope.view.editableValue = value;
+                        $scope.view.value = value;
                     };
 
                     $scope.disableEditor = function() {
@@ -91,8 +93,18 @@
                     };
 
                     $scope.save = function() {
-                        $scope.value = $scope.view.editableValue;
-                        $scope.disableEditor();
+                        $scope.saveEdit($scope.model, $scope.view.value).$promise.then(function() {
+                            $scope.disableEditor();
+                        });
+                    };
+
+                    $scope.handleKeyDown = function(event) {
+                        if (event.keyCode === 27) {
+                            $scope.disableEditor();
+                        }
+                        if (event.keyCode === 13) {
+                            $scope.save();
+                        }
                     };
                 }
             };

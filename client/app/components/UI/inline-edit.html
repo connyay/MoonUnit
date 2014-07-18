@@ -1,0 +1,12 @@
+<span ng-transclude ng-hide="view.editorEnabled"></span>
+<span ng-show="view.editorEnabled">
+    <div class="col-lg-3">
+        <input ng-model="view.value" class="form-control input-sm inline-editor" ng-keydown="handleKeyDown($event)">
+    </div>
+    <div class="btn-group">
+        <button ng-click="save()" type="button" class="btn btn-success btn-sm" title="Save"><i class="fa fa-save"></i>
+        </button>
+        <button ng-click="disableEditor()" type="button" class="btn btn-warning btn-sm" title="Cancel"><i class="fa fa-undo"></i>
+        </button>
+    </div>
+</span>

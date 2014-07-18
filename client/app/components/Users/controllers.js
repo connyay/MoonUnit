@@ -17,12 +17,13 @@
         })
         .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
             var attempts = 0;
+            var username = $routeParams.username;
             $scope.loading = true;
             $scope.isSmoke = false;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
                 Data.user({
-                    username: $routeParams.username
+                    username: username
                 }, function(user) {
                     $scope.loading = false;
                     $scope.user = user;
@@ -48,14 +49,24 @@
 
             $scope.deleteRun = function(test_run) {
                 Data.deleteRun({
-                    username: $routeParams.username,
+                    username: username,
                     id: test_run.id
                 }, function() {
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.saveEdit = function(test_run, value) {
+                return Data.updateRun({
+                    username: username,
+                    id: test_run.id
+                }, {
+                    'build_id': value
+                }, function() {
+                    test_run.build_id = value;
+                });
+            };
             $scope.getPrefix = function() {
-                return 'users/' + $routeParams.username + '/test_runs';
+                return 'users/' + username + '/test_runs';
             };
         })
         .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {

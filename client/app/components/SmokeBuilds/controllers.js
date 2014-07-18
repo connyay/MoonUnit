@@ -40,6 +40,16 @@
                     $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                 });
             };
+            $scope.saveEdit = function(test_run, value) {
+                return Data.updateRun({
+                    username: smokeBuildUser,
+                    id: test_run.id
+                }, {
+                    'build_id': value
+                }, function() {
+                    test_run.build_id = value;
+                });
+            };
             $scope.getPrefix = function() {
                 return 'smoke-builds';
             };

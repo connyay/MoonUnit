@@ -119,8 +119,7 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-list.html',
                 controller: function($scope, $modal) {
-                    $scope.delete = function(test_run) {
-
+                    $scope.delete = function(test_run, ev) {
                         var modalInstance = $modal.open({
                             templateUrl: 'result-list-modal.html',
                             controller: function($scope, $modalInstance, test_run) {
