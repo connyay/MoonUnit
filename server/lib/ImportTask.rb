@@ -81,8 +81,8 @@ class ImportTask
 					result = "pass"
 					time = test[:time].to_f
 
-					#fetch or create the test record
-					test_record = createOrFetch(package, class_name, name)
+					#fetch or create the test record, only returns the id
+					test_id = createOrFetch(package, class_name, name)
 
 					failure = test.css("failure")
 					error = test.css("error")
@@ -97,9 +97,9 @@ class ImportTask
 					end
 
 					#ignore duplicate tests like licenseAvailability until I can find a better solution
-					next if test_run.test_results.find_by(:test_id => test_record.id)
+					next if test_run.test_results.find_by(:test_id => test_id)
 
-					TestResult.create(:test_id => test_record.id, :result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id], :log => log )
+					TestResult.create(:test_id => test_id, :result => result, :time => time, :test_run_id => test_run.id, :checksum => test[:id], :log => log )
 
 				end
 			end
