@@ -42,7 +42,7 @@ MoonUnit::Application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :info
+  config.log_level = :error
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -53,12 +53,18 @@ MoonUnit::Application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
-  credentials = JSON.parse( ENV['VCAP_SERVICES'] )['memcachedcloud'].first['credentials']
-  config.cache_store = :dalli_store, credentials['servers'], {
-    :username => credentials['username'],
-    :password => credentials['password'],
-    :compress => true
-  }
+  #We deploy to staging with this production config, and there is no memcache service on the staging environment
+  obj = JSON.parse( ENV['VCAP_SERVICES'] )['memcachedcloud']
+  if obj
+    credentials = obj.first['credentials']
+    config.cache_store = :dalli_store, credentials['servers'], {
+      :username => credentials['username'],
+      :password => credentials['password'],
+      :compress => true
+    }
+  else
+    Logger.new(STDOUT).warn("Memcahcedcloud credentials not found. Using default memory cache")
+  end
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"

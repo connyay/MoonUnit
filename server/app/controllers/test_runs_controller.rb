@@ -32,6 +32,7 @@ class TestRunsController < ApplicationController
 
 	def destroy 
 		test_run = TestRun.find(params[:id]).destroy
+		Rails.cache.delete "test-run-#{params[:id]}"
 		head :ok
 	end
 
