@@ -19,7 +19,8 @@ module TestCache
 
 		unless test_id
 			test = Test.create(:package => package, :class_name => class_name, :name => name)
-			Rails.cache.write(hash,test.id)
+			test_id = test.id
+			Rails.cache.write(hash,test_id)
 		end
 
 		return test_id
