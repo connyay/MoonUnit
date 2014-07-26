@@ -72,7 +72,7 @@
                 return 'users/' + username + '/test_runs';
             };
         })
-        .controller('ShowResultCtrl', function($scope, $routeParams, Data, SMOKE_USER, isSmoke) {
+        .controller('ShowResultCtrl', function($scope, $routeParams, Data, SMOKE_USER, isSmoke, $filter) {
             var username = isSmoke ? SMOKE_USER : $routeParams.username;
             $scope.user = username;
             $scope.isSmoke = isSmoke;
@@ -85,6 +85,7 @@
                     $scope.loading = false;
                     $scope.result = result;
                     $scope.data = $scope.initData = result.test_results;
+                    $scope.date = $filter('date')(result.created_at, 'short');
                 });
             };
             getResult();

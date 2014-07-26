@@ -9,6 +9,8 @@ gulp.task('scripts', function() {
     gulp.src(['!./app/**/*_test.js', '!./app/assets/**/*.js', './app/**/*.js'])
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
+        .pipe(plugins.ngAnnotate())
+        .pipe(plugins.uglify())
         .pipe(plugins.concat('app.js'))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });

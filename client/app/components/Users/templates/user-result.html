@@ -2,7 +2,7 @@
     <li>
         <a href="#/smoke-builds">Smoke Builds</a>
     </li>
-    <li class="active">{{result.build_id}}
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
         <loading size="small"></loading>
     </li>
 </ol>
@@ -13,14 +13,14 @@
     <li>
         <a href="#/users/{{user}}">{{user}}</a>
     </li>
-    <li class="active">{{result.build_id}}
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
         <loading size="small"></loading>
     </li>
 </ol>
 <div class="page-header">
-    <small class="text-muted pull-right">{{result.created_at | date:'short' }}</small>
+    <refresh></refresh>
     <h2>{{ isSmoke ? 'Smoke Build' : 'Test Results' }}
-        <small>{{result.build_id}}</small>
+        <small tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}</small>
     </h2>
 </div>
 
