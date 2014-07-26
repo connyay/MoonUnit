@@ -1,7 +1,17 @@
-<ol class="breadcrumb">
-    <li><a href="#/users">Users</a>
+<ol class="breadcrumb" ng-if='isSmoke'>
+    <li>
+        <a href="#/smoke-builds">Smoke Builds</a>
     </li>
-    <li><a href="#/users/{{user}}">{{user}}</a>
+    <li class="active">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
+</ol>
+<ol class="breadcrumb" ng-if='!isSmoke'>
+    <li>
+        <a href="#/users">Users</a>
+    </li>
+    <li>
+        <a href="#/users/{{user}}">{{user}}</a>
     </li>
     <li class="active">{{result.build_id}}
         <loading size="small"></loading>
@@ -9,7 +19,7 @@
 </ol>
 <div class="page-header">
     <small class="text-muted pull-right">{{result.created_at | date:'short' }}</small>
-    <h2>Test Results
+    <h2>{{ isSmoke ? 'Smoke Build' : 'Test Results' }}
         <small>{{result.build_id}}</small>
     </h2>
 </div>

@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'windowEventBroadcasts'])
-        .controller('ListUsersCtrl', function($scope, Data) {
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+        .controller('ListCtrl', function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
                 Data.users({}, function(users) {
@@ -15,13 +15,13 @@
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
+        .controller('ShowCtrl', function($scope, $routeParams, Data, Pagination, $timeout, SMOKE_USER, isSmoke) {
             var attempts = 0;
-            var username = $routeParams.username;
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
             $scope.loading = true;
-            $scope.isSmoke = false;
+            $scope.isSmoke = isSmoke;
             $scope.pagination = Pagination.getNew(15);
-            var getUser = __.debounce(function() {
+            var getUser = function() {
                 Data.user({
                     username: username
                 }, function(user) {
@@ -41,7 +41,7 @@
                         attempts = 0;
                     }
                 });
-            }, 3000, true);
+            };
             getUser();
             $scope.refresh = function() {
                 getUser();
@@ -66,38 +66,31 @@
                 });
             };
             $scope.getPrefix = function() {
+                if (isSmoke) {
+                    return 'smoke-builds';
+                }
                 return 'users/' + username + '/test_runs';
             };
-            $scope.$on('$windowFocus', function() {
-                getUser();
-            });
-            $scope.$on('$windowShow', function() {
-                getUser();
-            });
         })
-        .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
-            $scope.user = $routeParams.username;
+        .controller('ShowResultCtrl', function($scope, $routeParams, Data, SMOKE_USER, isSmoke) {
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.user = username;
+            $scope.isSmoke = isSmoke;
             $scope.loading = true;
-            var getResult = __.debounce(function() {
+            var getResult = function() {
                 Data.testRuns({
-                    username: $routeParams.username,
+                    username: username,
                     id: $routeParams.id
                 }, function(result) {
                     $scope.loading = false;
                     $scope.result = result;
                     $scope.data = $scope.initData = result.test_results;
                 });
-            }, 10000, true);
+            };
             getResult();
             $scope.refresh = function() {
                 getResult();
             };
-            $scope.$on('$windowFocus', function() {
-                getResult();
-            });
-            $scope.$on('$windowShow', function() {
-                getResult();
-            });
         });
 
 })();

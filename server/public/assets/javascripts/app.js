@@ -1,50 +1,17 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.smokebuilds', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
         .config(function($routeProvider) {
             $routeProvider
                 .otherwise({
                     redirectTo: '/users'
                 });
-        });
+        })
+        .constant('SMOKE_USER', 'rmauto');
 
 })();
 
-window.__ = {
-    debounce: function(func, wait, immediate) {
-        var timeout, args, context, timestamp, result;
-
-        var later = function() {
-            var last = Date.now - timestamp;
-            if (last < wait) {
-                timeout = setTimeout(later, wait - last);
-            } else {
-                timeout = null;
-                if (!immediate) {
-                    result = func.apply(context, args);
-                    context = args = null;
-                }
-            }
-        };
-
-        return function() {
-            context = this;
-            args = arguments;
-            timestamp = Date.now;
-            var callNow = immediate && !timeout;
-            if (!timeout) {
-                timeout = setTimeout(later, wait);
-            }
-            if (callNow) {
-                result = func.apply(context, args);
-                context = args = null;
-            }
-
-            return result;
-        };
-    }
-};
 (function() {
     'use strict';
     angular.module('moonunit.data', ['ngResource'])
@@ -76,6 +43,7 @@ window.__ = {
         ]);
 
 })();
+
 (function() {
     'use strict';
 
@@ -225,110 +193,7 @@ window.__ = {
             };
         });
 })();
-(function() {
-    'use strict';
-    var smokeBuildUser = 'rmauto';
-    angular.module('moonunit.smokebuilds.controllers', ['windowEventBroadcasts'])
-        .controller('ListSmokeBuildsCtrl', function($scope, Data, Pagination, $timeout) {
-            var attempts = 0;
-            $scope.loading = true;
-            $scope.isSmoke = true;
-            $scope.pagination = Pagination.getNew(15);
-            var getBuilds = __.debounce(function() {
-                Data.user({
-                    username: smokeBuildUser
-                }, function(user) {
-                    $scope.loading = false;
-                    $scope.user = user;
-                    $scope.test_runs = user.test_runs;
-                    $scope.pagination.numPages = Math.ceil($scope.test_runs.length / $scope.pagination.perPage);
-                    if (user.test_runs.some(function(run) {
-                        return run.locked;
-                    })) {
-                        if (attempts < 30) {
-                            $timeout(function() {
-                                getBuilds();
-                            }, 3001);
-                        }
-                    } else {
-                        attempts = 0;
-                    }
-                });
-            }, 3000, true);
-            getBuilds();
-            $scope.refresh = function() {
-                getBuilds();
-            };
-            $scope.deleteRun = function(test_run) {
-                Data.deleteRun({
-                    username: smokeBuildUser,
-                    id: test_run.id
-                }, function() {
-                    $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
-                });
-            };
-            $scope.saveEdit = function(test_run, value) {
-                return Data.updateRun({
-                    username: smokeBuildUser,
-                    id: test_run.id
-                }, {
-                    'build_id': value
-                }, function() {
-                    test_run.build_id = value;
-                });
-            };
-            $scope.getPrefix = function() {
-                return 'smoke-builds';
-            };
-            $scope.$on('$windowFocus', function() {
-                getBuilds();
-            });
-            $scope.$on('$windowShow', function() {
-                getBuilds();
-            });
-        })
-        .controller('ShowSmokeBuildCtrl', function($scope, Data, $routeParams, Pagination) {
-            $scope.loading = true;
-            var getBuild = __.debounce(function() {
-                Data.testRuns({
-                    username: smokeBuildUser,
-                    id: $routeParams.id
-                }, function(smokeBuild) {
-                    $scope.loading = false;
-                    $scope.smokeBuild = smokeBuild;
-                    $scope.data = $scope.initData = smokeBuild.test_results;
-                });
-            }, 10000, true);
-            getBuild();
-            $scope.refresh = function() {
-                getBuild();
-            };
-            $scope.$on('$windowFocus', function() {
-                getBuild();
-            });
-            $scope.$on('$windowShow', function() {
-                getBuild();
-            });
-        });
 
-})();
-(function() {
-    'use strict';
-
-    angular.module('moonunit.smokebuilds', ['ngRoute', 'moonunit.smokebuilds.controllers'])
-        .config(function($routeProvider) {
-            $routeProvider
-                .when('/smoke-builds', {
-                    templateUrl: 'components/SmokeBuilds/templates/smoke-builds.html',
-                    controller: 'ListSmokeBuildsCtrl'
-                })
-                .when('/smoke-builds/:id', {
-                    templateUrl: 'components/SmokeBuilds/templates/smoke-build.html',
-                    controller: 'ShowSmokeBuildCtrl'
-                });
-        });
-
-})();
 (function() {
     'use strict';
     var defaultActiveClass = 'active';
@@ -441,11 +306,12 @@ window.__ = {
             };
         });
 })();
+
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'windowEventBroadcasts'])
-        .controller('ListUsersCtrl', function($scope, Data) {
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+        .controller('ListCtrl', function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
                 Data.users({}, function(users) {
@@ -458,13 +324,13 @@ window.__ = {
                 getUsers();
             };
         })
-        .controller('ShowUserCtrl', function($scope, $routeParams, Data, Pagination, $timeout) {
+        .controller('ShowCtrl', function($scope, $routeParams, Data, Pagination, $timeout, SMOKE_USER, isSmoke) {
             var attempts = 0;
-            var username = $routeParams.username;
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
             $scope.loading = true;
-            $scope.isSmoke = false;
+            $scope.isSmoke = isSmoke;
             $scope.pagination = Pagination.getNew(15);
-            var getUser = __.debounce(function() {
+            var getUser = function() {
                 Data.user({
                     username: username
                 }, function(user) {
@@ -484,7 +350,7 @@ window.__ = {
                         attempts = 0;
                     }
                 });
-            }, 3000, true);
+            };
             getUser();
             $scope.refresh = function() {
                 getUser();
@@ -509,59 +375,75 @@ window.__ = {
                 });
             };
             $scope.getPrefix = function() {
+                if (isSmoke) {
+                    return 'smoke-builds';
+                }
                 return 'users/' + username + '/test_runs';
             };
-            $scope.$on('$windowFocus', function() {
-                getUser();
-            });
-            $scope.$on('$windowShow', function() {
-                getUser();
-            });
         })
-        .controller('ShowUserResultCtrl', function($scope, $routeParams, Data) {
-            $scope.user = $routeParams.username;
+        .controller('ShowResultCtrl', function($scope, $routeParams, Data, SMOKE_USER, isSmoke) {
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.user = username;
+            $scope.isSmoke = isSmoke;
             $scope.loading = true;
-            var getResult = __.debounce(function() {
+            var getResult = function() {
                 Data.testRuns({
-                    username: $routeParams.username,
+                    username: username,
                     id: $routeParams.id
                 }, function(result) {
                     $scope.loading = false;
                     $scope.result = result;
                     $scope.data = $scope.initData = result.test_results;
                 });
-            }, 10000, true);
+            };
             getResult();
             $scope.refresh = function() {
                 getResult();
             };
-            $scope.$on('$windowFocus', function() {
-                getResult();
-            });
-            $scope.$on('$windowShow', function() {
-                getResult();
-            });
         });
 
 })();
+
 (function() {
     'use strict';
-
+    var smokeBuildObj = {
+        isSmoke: function() {
+            return true;
+        }
+    };
+    var templates = {
+        users: 'components/Users/templates/users.html',
+        user: 'components/Users/templates/user.html',
+        result: 'components/Users/templates/user-result.html'
+    };
     angular.module('moonunit.users', ['ngRoute', 'moonunit.users.controllers'])
         .config(function($routeProvider) {
             $routeProvider
                 .when('/users', {
-                    templateUrl: 'components/Users/templates/users.html',
-                    controller: 'ListUsersCtrl'
+                    templateUrl: templates.users,
+                    controller: 'ListCtrl'
                 })
                 .when('/users/:username', {
-                    templateUrl: 'components/Users/templates/user.html',
-                    controller: 'ShowUserCtrl'
+                    templateUrl: templates.user,
+                    controller: 'ShowCtrl'
                 })
-            .when('/users/:username/test_runs/:id', {
-                    templateUrl: 'components/Users/templates/user-result.html',
-                    controller: 'ShowUserResultCtrl'
+                .when('/users/:username/test_runs/:id', {
+                    templateUrl: templates.result,
+                    controller: 'ShowResultCtrl'
+                })
+                .when('/smoke-builds', {
+                    templateUrl: templates.user,
+                    controller: 'ShowCtrl',
+                    resolve: smokeBuildObj
+                })
+                .when('/smoke-builds/:id', {
+                    templateUrl: templates.result,
+                    controller: 'ShowResultCtrl',
+                    resolve: smokeBuildObj
                 });
+        })
+        .factory('isSmoke', function() {
+            return false;
         });
 
 })();
