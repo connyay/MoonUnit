@@ -103,30 +103,48 @@
 
                     $scope.aggregate = function(row) {
                         if (row.field === 'package' || row.field === 'class_name') {
-                            var pass = 0,
+                            var result,
+                                pass = 0,
                                 fail = 0,
+                                error = 0,
                                 i = 0,
                                 j = 0,
                                 length = row.children.length;
                             for (i = 0; i < length; i++) {
-                                if (row.children[i].entity.result === 'pass') {
+                                result = row.children[i].entity.result;
+                                if (result === 'pass') {
                                     pass++;
-                                } else {
+                                } else if (result === 'fail') {
                                     fail++;
+                                } else if (result === 'error') {
+                                    error++;
                                 }
                             }
                             length = row.aggChildren.length;
                             for (i = 0; i < length; i++) {
                                 var aggLength = row.aggChildren[i].children.length;
                                 for (j = 0; j < aggLength; j++) {
-                                    if (row.aggChildren[i].children[j].entity.result === 'pass') {
+                                    result = row.aggChildren[i].children[j].entity.result;
+                                    if (result === 'pass') {
                                         pass++;
-                                    } else {
+                                    } else if (result === 'fail') {
                                         fail++;
+                                    } else if (result === 'error') {
+                                        error++;
                                     }
                                 }
                             }
-                            return pass + ' Passed | ' + fail + ' Failed';
+                            result = [];
+                            if (pass) {
+                                result.push(pass + ' Passed');
+                            }
+                            if (fail) {
+                                result.push(fail + ' Failed');
+                            }
+                            if (error) {
+                                result.push(error + ' Errored');
+                            }
+                            return result.join(' | ');
                         }
                     };
                     $scope.viewLog = function(test) {
