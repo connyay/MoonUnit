@@ -1,6 +1,437 @@
-!function(){"use strict";angular.module("moonunit",["ngRoute","templates","moonunit.users","ui.bootstrap","simplePagination","moonunit.ui.directives"]).config(["$routeProvider",function(o){o.otherwise({redirectTo:"/users"})}]).constant("SMOKE_USER","rmauto")}();
-!function(){"use strict";angular.module("moonunit.data",["ngResource"]).factory("Data",["$resource",function(e){return e("/users",{},{users:{method:"GET",isArray:!0},user:{url:"/users/:username",method:"GET"},testRuns:{url:"/users/:username/test_runs/:id",method:"GET"},deleteRun:{url:"/users/:username/test_runs/:id",method:"DELETE"},updateRun:{url:"/users/:username/test_runs/:id",method:"PUT"}})}])}();
-!function(){"use strict";angular.module("moonunit.results.directives",["ngGrid"]).directive("resultTable",function(){return{restrict:"E",templateUrl:"components/Results/templates/results-table.html",controller:["$scope","$filter",function(e,t){e.initData=[],e.data=[],e.passed=0,e.failed=0,e.radioFilter="all",e.$watch("radioFilter",function(l){return"all"===l?void(e.data=e.initData):void(e.data=t("filter")(e.initData,{result:l}))}),e.$watch("data",function(t){var l=0,a=0,i=0,s=t.length;for(i=0;s>i;i++)"pass"===t[i].result?l++:a++;e.passed=l,e.failed=a,e.total=s,e.loading||e.staticTotals||(e.staticTotals={passed:l,failed:a,total:s})}),e.filterOptions={filterText:""},e.aggregate=function(e){if("package"===e.field||"class_name"===e.field){var t=0,l=0,a=0,i=0,s=e.children.length;for(a=0;s>a;a++)"pass"===e.children[a].entity.result?t++:l++;for(s=e.aggChildren.length,a=0;s>a;a++){var n=e.aggChildren[a].children.length;for(i=0;n>i;i++)"pass"===e.aggChildren[a].children[i].entity.result?t++:l++}return t+" Passed | "+l+" Failed"}},e.gridOptions={data:"data",showGroupPanel:!0,columnDefs:[{field:"package",displayName:"Package",width:"**"},{field:"class_name",displayName:"Class Name",width:"**"},{field:"name",displayName:"Test Name",cellTemplate:'<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',width:"**"},{field:"time",displayName:"Time",cellTemplate:'<div class="ngCellText colt{{$index}}">{{ row.entity[col.field] | number:2}} sec</div>'},{field:"result",displayName:"Result",cellTemplate:"<div class=\"ngCellText text-center colt{{$index}}\"><span class=\"label\" ng-class=\"{'label-success': row.entity[col.field] === 'pass', 'label-danger': row.entity[col.field] !== 'pass'}\">{{ row.entity[col.field] === 'pass' ? 'Pass' : 'Fail'}}</span></div>"}],filterOptions:e.filterOptions,enableRowSelection:!1,groups:["package"],aggregateTemplate:'<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>   <div class="{{row.aggClass()}}"></div></div>'}}]}}).directive("resultsList",function(){return{restrict:"E",templateUrl:"components/Results/templates/results-list.html",controller:["$scope","$modal",function(e,t){e.delete=function(l){var a=t.open({templateUrl:"result-list-modal.html",controller:["$scope","$modalInstance","test_run",function(e,t,l){e.test_run=l,e.ok=function(){t.close(l)},e.cancel=function(){t.dismiss("cancel")}}],size:"sm",resolve:{test_run:function(){return l}}});a.result.then(function(t){e.deleteRun(t)})}}]}})}();
-!function(){"use strict";var e="active";angular.module("moonunit.ui.directives",[]).directive("mainNav",function(){return{restrict:"E",replace:!0,templateUrl:"components/UI/main-nav.html",controller:["$scope",function(e){e.navItems=[{title:"Users",icon:"users",route:"users"},{title:"Smoke Builds",icon:"cloud-download",route:"smoke-builds"}]}]}}).directive("isActive",["$location",function(t){return{restrict:"A",link:function(i,n,r){var o=r.activeClass||e,l=r.route||(r.href||r.ngHref).substr(1);i.location=t,i.$watch("location.path()",function(e){n.toggleClass(o,l===e)})}}}]).directive("loading",function(){return{restrict:"E",templateUrl:"components/UI/loading.html",link:function(e,t,i){e.size=i.size||"large"}}}).directive("filter",function(){return{restrict:"E",templateUrl:"components/UI/filter.html"}}).directive("moonPager",function(){return{restrict:"E",templateUrl:"components/UI/moon-pager.html"}}).directive("refresh",function(){return{restrict:"E",templateUrl:"components/UI/refresh.html"}}).directive("inlineEdit",function(){return{restrict:"E",transclude:!0,templateUrl:"components/UI/inline-edit.html",link:function(e,t){var i=$(t);e.$watch("view.editorEnabled",function(e){e&&$(".inline-editor",i).select().focus()})},controller:["$scope",function(e){e.view=e.$parent.view={editableValue:e.value,editorEnabled:!1},e.edit=function(t,i){e.model=t,e.view.editorEnabled=!0,e.view.value=i},e.disableEditor=function(){e.view.editorEnabled=!1},e.save=function(){e.saveEdit(e.model,e.view.value).$promise.then(function(){e.disableEditor()})},e.handleKeyDown=function(t){27===t.keyCode&&e.disableEditor(),13===t.keyCode&&e.save()}}]}})}();
-!function(){"use strict";angular.module("moonunit.users.controllers",["moonunit.data","moonunit.results.directives"]).controller("ListCtrl",["$scope","Data",function(n,t){n.loading=!0;var e=function(){t.users({},function(t){n.loading=!1,n.users=t})};e(),n.refresh=function(){e()}}]).controller("ShowCtrl",["$scope","$routeParams","Data","Pagination","$timeout","SMOKE_USER","isSmoke",function(n,t,e,i,u,s,r){var o=0,a=r?s:t.username;n.loading=!0,n.isSmoke=r,n.pagination=i.getNew(15);var c=function(){e.user({username:a},function(t){n.loading=!1,n.user=t,n.test_runs=t.test_runs,n.pagination.numPages=Math.ceil(n.test_runs.length/n.pagination.perPage),t.test_runs.some(function(n){return n.locked})?30>o&&u(function(){c()},3e3):o=0})};c(),n.refresh=function(){c()},n.deleteRun=function(t){e.deleteRun({username:a,id:t.id},function(){n.test_runs.splice(n.test_runs.indexOf(t),1)})},n.saveEdit=function(n,t){return e.updateRun({username:a,id:n.id},{build_id:t},function(){n.build_id=t})},n.getPrefix=function(){return r?"smoke-builds":"users/"+a+"/test_runs"}}]).controller("ShowResultCtrl",["$scope","$routeParams","Data","SMOKE_USER","isSmoke","$filter",function(n,t,e,i,u,s){var r=u?i:t.username;n.user=r,n.isSmoke=u,n.loading=!0;var o=function(){e.testRuns({username:r,id:t.id},function(t){n.loading=!1,n.result=t,n.data=n.initData=t.test_results,n.date=s("date")(t.created_at,"short")})};o(),n.refresh=function(){o()}}])}();
-!function(){"use strict";var e={isSmoke:function(){return!0}},r={users:"components/Users/templates/users.html",user:"components/Users/templates/user.html",result:"components/Users/templates/user-result.html"};angular.module("moonunit.users",["ngRoute","moonunit.users.controllers"]).config(["$routeProvider",function(s){s.when("/users",{templateUrl:r.users,controller:"ListCtrl"}).when("/users/:username",{templateUrl:r.user,controller:"ShowCtrl"}).when("/users/:username/test_runs/:id",{templateUrl:r.result,controller:"ShowResultCtrl"}).when("/smoke-builds",{templateUrl:r.user,controller:"ShowCtrl",resolve:e}).when("/smoke-builds/:id",{templateUrl:r.result,controller:"ShowResultCtrl",resolve:e})}]).factory("isSmoke",function(){return!1})}();
+(function() {
+    'use strict';
+
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
+        .config(["$routeProvider", function($routeProvider) {
+            $routeProvider
+                .otherwise({
+                    redirectTo: '/users'
+                });
+        }])
+        .constant('SMOKE_USER', 'rmauto');
+
+})();
+
+(function() {
+    'use strict';
+    angular.module('moonunit.data', [])
+        .factory('Data', ["$http", function($http) {
+            var urlBase = '/users';
+            return {
+                getUsers: function() {
+                    return $http.get(urlBase);
+                },
+                getUser: function(username) {
+                    return $http.get(urlBase + '/' + username);
+                },
+                getTestRun: function(username, testRunID) {
+                    return $http.get(urlBase + '/' + username + '/test_runs/' + testRunID);
+                },
+                deleteTestRun: function(username, testRunID) {
+                    return $http.delete(urlBase + '/' + username + '/test_runs/' + testRunID);
+                },
+                updateTestRun: function(username, testRunID, data) {
+                    return $http.put(urlBase + '/' + username + '/test_runs/' + testRunID, data);
+                }
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('moonunit.results.directives', ['ngGrid'])
+        .directive('resultTable', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/Results/templates/results-table.html',
+                controller: ["$scope", "$filter", function($scope, $filter) {
+                    $scope.initData = [];
+                    $scope.data = [];
+                    $scope.passed = 0;
+                    $scope.failed = 0;
+                    $scope.radioFilter = 'all';
+                    $scope.$watch('radioFilter', function(value) {
+                        if (value === 'all') {
+                            $scope.data = $scope.initData;
+                            return;
+                        }
+                        $scope.data = $filter('filter')($scope.initData, {
+                            result: value
+                        });
+                    });
+
+                    $scope.$watch('data', function(data) {
+                        var pass = 0,
+                            fail = 0,
+                            i = 0,
+                            total = data.length;
+                        for (i = 0; i < total; i++) {
+                            if (data[i].result === 'pass') {
+                                pass++;
+                            } else {
+                                fail++;
+                            }
+                        }
+                        $scope.passed = pass;
+                        $scope.failed = fail;
+                        $scope.total = total;
+                        if (!$scope.loading && !$scope.staticTotals) {
+                            $scope.staticTotals = {
+                                passed: pass,
+                                failed: fail,
+                                total: total
+                            };
+                        }
+                    });
+                    $scope.filterOptions = {
+                        filterText: ''
+                    };
+
+                    $scope.aggregate = function(row) {
+                        if (row.field === 'package' || row.field === 'class_name') {
+                            var pass = 0,
+                                fail = 0,
+                                i = 0,
+                                j = 0,
+                                length = row.children.length;
+                            for (i = 0; i < length; i++) {
+                                if (row.children[i].entity.result === 'pass') {
+                                    pass++;
+                                } else {
+                                    fail++;
+                                }
+                            }
+                            length = row.aggChildren.length;
+                            for (i = 0; i < length; i++) {
+                                var aggLength = row.aggChildren[i].children.length;
+                                for (j = 0; j < aggLength; j++) {
+                                    if (row.aggChildren[i].children[j].entity.result === 'pass') {
+                                        pass++;
+                                    } else {
+                                        fail++;
+                                    }
+                                }
+                            }
+                            return pass + ' Passed | ' + fail + ' Failed';
+                        }
+                    };
+                    $scope.gridOptions = {
+                        data: 'data',
+                        showGroupPanel: true,
+                        columnDefs: [{
+                            field: 'package',
+                            displayName: 'Package',
+                            width: '**'
+                        }, {
+                            field: 'class_name',
+                            displayName: 'Class Name',
+                            width: '**',
+                        }, {
+                            field: 'name',
+                            displayName: 'Test Name',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',
+                            width: '**',
+                        }, {
+                            field: 'time',
+                            displayName: 'Time',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}">{{ row.entity[col.field] | number:2}} sec</div>',
+                        }, {
+                            field: 'result',
+                            displayName: 'Result',
+                            cellTemplate: '<div class="ngCellText text-center colt{{$index}}"><span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] !== \'pass\'}">{{ row.entity[col.field] === \'pass\' ? \'Pass\' : \'Fail\'}}</span></div>'
+                        }],
+                        filterOptions: $scope.filterOptions,
+                        enableRowSelection: false,
+                        groups: ['package'],
+                        aggregateTemplate: '<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">' +
+                            '   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>' +
+                            '   <div class="{{row.aggClass()}}"></div>' +
+                            '</div>'
+                    };
+
+                }]
+            };
+        })
+        .directive('resultsList', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/Results/templates/results-list.html',
+                controller: ["$scope", "$modal", function($scope, $modal) {
+                    $scope.delete = function(test_run, ev) {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'result-list-modal.html',
+                            controller: ["$scope", "$modalInstance", "test_run", function($scope, $modalInstance, test_run) {
+                                $scope.test_run = test_run;
+                                $scope.ok = function() {
+                                    $modalInstance.close(test_run);
+                                };
+                                $scope.cancel = function() {
+                                    $modalInstance.dismiss('cancel');
+                                };
+                            }],
+                            size: 'sm',
+                            resolve: {
+                                'test_run': function() {
+                                    return test_run;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(test_run) {
+                            $scope.deleteRun(test_run);
+                        });
+                    };
+                }]
+            };
+        });
+})();
+
+(function() {
+    'use strict';
+    var defaultActiveClass = 'active';
+    angular.module('moonunit.ui.directives', [])
+        .directive('mainNav', function() {
+            return {
+                restrict: 'E',
+                replace: true,
+                templateUrl: 'components/UI/main-nav.html',
+                controller: ["$scope", function($scope) {
+                    $scope.navItems = [{
+                        title: 'Users',
+                        icon: 'users',
+                        route: 'users'
+                    }, {
+                        title: 'Smoke Builds',
+                        icon: 'cloud-download',
+                        route: 'smoke-builds'
+                    }];
+                }]
+            };
+        })
+        .directive('isActive', ['$location',
+            function($location) {
+                return {
+                    restrict: 'A',
+                    link: function($scope, element, attrs) {
+                        var activeClass = attrs.activeClass || defaultActiveClass;
+
+                        var path = attrs.route || (attrs.href || attrs.ngHref).substr(1);
+                        $scope.location = $location;
+                        $scope.$watch('location.path()', function(newPath) {
+                            element.toggleClass(activeClass, (path === newPath));
+                        });
+                    }
+                };
+            }
+        ])
+        .directive('loading', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/loading.html',
+                link: function($scope, $element, $attrs) {
+                    $scope.size = $attrs.size || 'large';
+                }
+            };
+        })
+        .directive('filter', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/filter.html'
+            };
+        })
+        .directive('moonPager', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/moon-pager.html'
+            };
+        })
+        .directive('refresh', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/UI/refresh.html'
+            };
+        })
+        .directive("inlineEdit", function() {
+            return {
+                restrict: "E",
+                transclude: true,
+                templateUrl: 'components/UI/inline-edit.html',
+                link: function($scope, $element, $attrs) {
+                    var $$element = $($element);
+                    $scope.$watch('view.editorEnabled', function(newValue) {
+                        if (newValue) {
+                            $('.inline-editor', $$element).select().focus();
+                        }
+                    });
+                },
+                controller: ["$scope", function($scope) {
+                    $scope.view = $scope.$parent.view = {
+                        editableValue: $scope.value,
+                        editorEnabled: false
+                    };
+
+                    $scope.edit = function(model, value) {
+                        $scope.model = model;
+                        $scope.view.editorEnabled = true;
+                        $scope.view.value = value;
+                    };
+
+                    $scope.disableEditor = function() {
+                        $scope.view.editorEnabled = false;
+                    };
+
+                    $scope.save = function() {
+                        $scope.saveEdit($scope.model, $scope.view.value).then(function() {
+                            $scope.disableEditor();
+                        });
+                    };
+
+                    $scope.handleKeyDown = function(event) {
+                        if (event.keyCode === 27) {
+                            $scope.disableEditor();
+                        }
+                        if (event.keyCode === 13) {
+                            $scope.save();
+                        }
+                    };
+                }]
+            };
+        });
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+        .controller('ListCtrl', ["$scope", "Data", function($scope, Data) {
+            $scope.loading = true;
+            var getUsers = function() {
+                Data.getUsers().then(function(response) {
+                    $scope.loading = false;
+                    $scope.users = response.data;
+                });
+            };
+            getUsers();
+            $scope.refresh = function() {
+                getUsers();
+            };
+        }])
+        .controller('ShowCtrl', ["$scope", "$routeParams", "Data", "Pagination", "$timeout", "SMOKE_USER", "isSmoke", function($scope, $routeParams, Data, Pagination, $timeout, SMOKE_USER, isSmoke) {
+            var attempts = 0;
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.loading = true;
+            $scope.isSmoke = isSmoke;
+            $scope.pagination = Pagination.getNew(15);
+            var getUser = function() {
+                Data.getUser(username).then(function(response) {
+                    var user = response.data;
+                    $scope.loading = false;
+                    $scope.user = user;
+                    $scope.test_runs = user.test_runs;
+                    $scope.pagination.numPages = Math.ceil($scope.test_runs.length / $scope.pagination.perPage);
+                    if (user.test_runs.some(function(run) {
+                        return run.locked;
+                    })) {
+                        if (attempts < 30) {
+                            $timeout(function() {
+                                getUser();
+                            }, 3000);
+                        }
+                    } else {
+                        attempts = 0;
+                    }
+                });
+            };
+            getUser();
+            $scope.refresh = function() {
+                getUser();
+            };
+
+            $scope.deleteRun = function(test_run) {
+                Data.deleteTestRun(username, test_run.id)
+                    .then(function() {
+                        $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
+                    });
+            };
+            $scope.saveEdit = function(test_run, value) {
+                return Data.updateTestRun(username, test_run.id, {
+                    'build_id': value
+                }).then(function() {
+                    test_run.build_id = value;
+                });
+            };
+            $scope.getPrefix = function() {
+                if (isSmoke) {
+                    return 'smoke-builds';
+                }
+                return 'users/' + username + '/test_runs';
+            };
+        }])
+        .controller('ShowResultCtrl', ["$scope", "$routeParams", "Data", "SMOKE_USER", "isSmoke", "$filter", function($scope, $routeParams, Data, SMOKE_USER, isSmoke, $filter) {
+            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.user = username;
+            $scope.isSmoke = isSmoke;
+            $scope.loading = true;
+            var getResult = function() {
+                Data.getTestRun(username, $routeParams.id)
+                    .then(function(response) {
+                        var result = response.data;
+                        $scope.loading = false;
+                        $scope.result = result;
+                        $scope.data = $scope.initData = result.test_results;
+                        $scope.date = $filter('date')(result.created_at, 'short');
+                    });
+            };
+            getResult();
+            $scope.refresh = function() {
+                getResult();
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+    var smokeBuildObj = {
+        isSmoke: function() {
+            return true;
+        }
+    };
+    var templates = {
+        users: 'components/Users/templates/users.html',
+        user: 'components/Users/templates/user.html',
+        result: 'components/Users/templates/user-result.html'
+    };
+    angular.module('moonunit.users', ['ngRoute', 'moonunit.users.controllers'])
+        .config(["$routeProvider", function($routeProvider) {
+            $routeProvider
+                .when('/users', {
+                    templateUrl: templates.users,
+                    controller: 'ListCtrl'
+                })
+                .when('/users/:username', {
+                    templateUrl: templates.user,
+                    controller: 'ShowCtrl'
+                })
+                .when('/users/:username/test_runs/:id', {
+                    templateUrl: templates.result,
+                    controller: 'ShowResultCtrl'
+                })
+                .when('/smoke-builds', {
+                    templateUrl: templates.user,
+                    controller: 'ShowCtrl',
+                    resolve: smokeBuildObj
+                })
+                .when('/smoke-builds/:id', {
+                    templateUrl: templates.result,
+                    controller: 'ShowResultCtrl',
+                    resolve: smokeBuildObj
+                });
+        }])
+        .factory('isSmoke', function() {
+            return false;
+        });
+
+})();

@@ -93,7 +93,7 @@
                     };
 
                     $scope.save = function() {
-                        $scope.saveEdit($scope.model, $scope.view.value).$promise.then(function() {
+                        $scope.saveEdit($scope.model, $scope.view.value).then(function() {
                             $scope.disableEditor();
                         });
                     };

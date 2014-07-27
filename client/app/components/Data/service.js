@@ -1,31 +1,25 @@
 (function() {
     'use strict';
-    angular.module('moonunit.data', ['ngResource'])
-        .factory('Data', ['$resource',
-            function($resource) {
-                return $resource('/users', {}, {
-                    'users': {
-                        method: 'GET',
-                        isArray: true
-                    },
-                    'user': {
-                        url: '/users/:username',
-                        method: 'GET'
-                    },
-                    'testRuns': {
-                        url: '/users/:username/test_runs/:id',
-                        method: 'GET'
-                    },
-                    'deleteRun': {
-                        url: '/users/:username/test_runs/:id',
-                        method: 'DELETE'
-                    },
-                    'updateRun': {
-                        url: '/users/:username/test_runs/:id',
-                        method: 'PUT'
-                    }
-                });
-            }
-        ]);
+    angular.module('moonunit.data', [])
+        .factory('Data', function($http) {
+            var urlBase = '/users';
+            return {
+                getUsers: function() {
+                    return $http.get(urlBase);
+                },
+                getUser: function(username) {
+                    return $http.get(urlBase + '/' + username);
+                },
+                getTestRun: function(username, testRunID) {
+                    return $http.get(urlBase + '/' + username + '/test_runs/' + testRunID);
+                },
+                deleteTestRun: function(username, testRunID) {
+                    return $http.delete(urlBase + '/' + username + '/test_runs/' + testRunID);
+                },
+                updateTestRun: function(username, testRunID, data) {
+                    return $http.put(urlBase + '/' + username + '/test_runs/' + testRunID, data);
+                }
+            };
+        });
 
 })();

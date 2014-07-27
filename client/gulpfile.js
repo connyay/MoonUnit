@@ -10,8 +10,8 @@ gulp.task('scripts', function() {
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.ngAnnotate())
-        .pipe(plugins.uglify())
-        .pipe(plugins.concat('app.js'))
+    //.pipe(plugins.uglify())
+    .pipe(plugins.concat('app.js'))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
@@ -43,7 +43,6 @@ gulp.task('vendorJS', function() {
         './bower_components/jquery/jquery.js',
         './bower_components/angular/angular.js',
         './bower_components/angular-route/angular-route.js',
-        './bower_components/angular-resource/angular-resource.js',
         './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
         './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
         './bower_components/ng-grid/build/ng-grid.js',
