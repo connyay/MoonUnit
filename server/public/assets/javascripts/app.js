@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.users', 'ui.bootstrap', 'simplePagination', 'moonunit.ui.directives'])
+    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
         .config(["$routeProvider", function($routeProvider) {
             $routeProvider
                 .otherwise({
@@ -66,23 +66,28 @@
                     $scope.$watch('data', function(data) {
                         var pass = 0,
                             fail = 0,
+                            error = 0,
                             i = 0,
                             total = data.length;
                         for (i = 0; i < total; i++) {
                             if (data[i].result === 'pass') {
                                 pass++;
-                            } else {
+                            } else if (data[i].result === 'fail') {
                                 fail++;
+                            } else if (data[i].result === 'error') {
+                                error++;
                             }
                         }
                         $scope.passed = pass;
                         $scope.failed = fail;
+                        $scope.errored = error;
                         $scope.total = total;
                         if ((!$scope.loading && !$scope.staticTotals) || refreshCounts) {
                             $scope.staticTotals = {
                                 passed: pass,
                                 failed: fail,
-                                total: total
+                                total: total,
+                                errored: error
                             };
                             refreshCounts = false;
                         }
@@ -146,7 +151,10 @@
                         }, {
                             field: 'result',
                             displayName: 'Result',
-                            cellTemplate: '<div class="ngCellText text-center colt{{$index}}"><span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] !== \'pass\'}">{{ row.entity[col.field] === \'pass\' ? \'Pass\' : \'Fail\'}}</span></div>'
+                            cellTemplate: '<div class="ngCellText text-center colt{{$index}}">' +
+                                '<span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] === \'fail\', \'label-warning\': row.entity[col.field] === \'error\'}">' +
+                                '<i ng-if="row.entity.log" class="fa fa-file-o"></i> {{row.entity[col.field] | capitalize}}' +
+                                '</span></div>'
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
@@ -305,6 +313,21 @@
                 }]
             };
         });
+})();
+
+(function() {
+    'use strict';
+    angular.module('moonunit.ui.filters', [])
+        .filter('capitalize', function() {
+            return function(input, scope) {
+                return input.substring(0, 1).toUpperCase() + input.substring(1);
+            }
+        });
+})();
+
+(function() {
+    'use strict';
+    angular.module('moonunit.ui', ['moonunit.ui.directives', 'moonunit.ui.filters'])
 })();
 
 (function() {
