@@ -66,12 +66,13 @@
             };
         })
         .controller('ShowResultCtrl', function($scope, $routeParams, Data, SMOKE_USER, isSmoke, $filter) {
-            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            var username = isSmoke ? SMOKE_USER : $routeParams.username,
+                id = $routeParams.id;
             $scope.user = username;
             $scope.isSmoke = isSmoke;
             $scope.loading = true;
             var getResult = function() {
-                Data.getTestRun(username, $routeParams.id)
+                Data.getTestRun(username, id)
                     .success(function(result) {
                         $scope.loading = false;
                         $scope.result = result;
@@ -83,6 +84,9 @@
             $scope.refresh = function() {
                 $scope.$emit('refresh');
                 getResult();
+            };
+            $scope.getXmlLink = function() {
+                return window.location.origin + '/users/' + username + '/test_runs/' + id + '.xml';
             };
         });
 

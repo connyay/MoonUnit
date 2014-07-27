@@ -168,6 +168,9 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-list.html',
                 controller: function($scope, $modal) {
+                    $scope.getXmlLink = function(test_run) {
+                        return test_run.url + '.xml';
+                    };
                     $scope.delete = function(test_run, ev) {
                         var modalInstance = $modal.open({
                             templateUrl: 'components/Results/templates/result-list-modal.html',

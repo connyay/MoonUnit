@@ -19,6 +19,9 @@
 </ol>
 <div class="page-header">
     <refresh></refresh>
+    <button type="button" class="btn btn-primary btn-sm pull-right m-r-sm" clip-copy="getXmlLink()" title="Copy XML Link">
+        <span class="fa fa-link"></span>
+    </button>
     <h2>{{ isSmoke ? 'Smoke Build' : 'Test Results' }}
         <small tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}</small>
     </h2>

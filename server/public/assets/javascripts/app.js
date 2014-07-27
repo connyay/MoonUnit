@@ -1,13 +1,18 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'ngAnimate', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
+    angular.module('moonunit', ['ngRoute', 'ngAnimate', 'ngClipboard', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
         .config(["$routeProvider", function($routeProvider) {
             $routeProvider
                 .otherwise({
                     redirectTo: '/users'
                 });
         }])
+        .config(['ngClipProvider',
+            function(ngClipProvider) {
+                ngClipProvider.setPath('assets/ZeroClipboard.swf');
+            }
+        ])
         .constant('SMOKE_USER', 'rmauto');
 
 })();
@@ -208,6 +213,9 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-list.html',
                 controller: ["$scope", "$modal", function($scope, $modal) {
+                    $scope.getXmlLink = function(test_run) {
+                        return test_run.url + '.xml';
+                    };
                     $scope.delete = function(test_run, ev) {
                         var modalInstance = $modal.open({
                             templateUrl: 'components/Results/templates/result-list-modal.html',
@@ -433,12 +441,13 @@
             };
         }])
         .controller('ShowResultCtrl', ["$scope", "$routeParams", "Data", "SMOKE_USER", "isSmoke", "$filter", function($scope, $routeParams, Data, SMOKE_USER, isSmoke, $filter) {
-            var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            var username = isSmoke ? SMOKE_USER : $routeParams.username,
+                id = $routeParams.id;
             $scope.user = username;
             $scope.isSmoke = isSmoke;
             $scope.loading = true;
             var getResult = function() {
-                Data.getTestRun(username, $routeParams.id)
+                Data.getTestRun(username, id)
                     .success(function(result) {
                         $scope.loading = false;
                         $scope.result = result;
@@ -450,6 +459,9 @@
             $scope.refresh = function() {
                 $scope.$emit('refresh');
                 getResult();
+            };
+            $scope.getXmlLink = function() {
+                return window.location.origin + '/users/' + username + '/test_runs/' + id + '.xml';
             };
         }]);
 

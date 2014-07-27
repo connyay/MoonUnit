@@ -17,7 +17,7 @@ gulp.task('scripts', function() {
 
 gulp.task('less', function() {
     //combine all js files of the app
-    gulp.src(['./app/styles/master.less'])
+    gulp.src('./app/styles/master.less')
         .pipe(plugins.less({
             paths: [path.join(__dirname, 'less', 'includes')]
         }))
@@ -28,7 +28,7 @@ gulp.task('less', function() {
 
 gulp.task('templates', function() {
     //combine all template files of the app into a js file
-    gulp.src(['./app/**/*.html'])
+    gulp.src('./app/**/*.html')
         .pipe(plugins.angularTemplatecache('templates.js', {
             standalone: true
         }))
@@ -45,11 +45,16 @@ gulp.task('vendorJS', function() {
         './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
         './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
         './bower_components/ng-grid/build/ng-grid.js',
-        './bower_components/ng-simplePagination/simplePagination.js'
+        './bower_components/ng-simplePagination/simplePagination.js',
+        './bower_components/ng-clip/src/ngClip.js',
+        './bower_components/zeroclipboard/dist/ZeroClipboard.js'
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())
         .pipe(gulp.dest('../server/public/assets/javascripts'));
+
+    gulp.src('./bower_components/zeroclipboard/dist/ZeroClipboard.swf')
+        .pipe(gulp.dest('../server/public/assets'));
 });
 
 gulp.task('watch', function() {
