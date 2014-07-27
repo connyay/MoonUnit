@@ -86,7 +86,7 @@
                 getResult();
             };
             $scope.getXmlLink = function() {
-                return window.location.origin + '/users/' + username + '/test_runs/' + id + '.xml';
+                return window.location.protocol + "//" + window.location.host + '/users/' + username + '/test_runs/' + id + '.xml';
             };
         });
 
