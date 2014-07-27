@@ -83,6 +83,7 @@
             };
             getResult();
             $scope.refresh = function() {
+                $scope.$emit('refresh');
                 getResult();
             };
         });

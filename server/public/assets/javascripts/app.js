@@ -47,6 +47,7 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-table.html',
                 controller: ["$scope", "$filter", function($scope, $filter) {
+                    var refreshCounts = false;
                     $scope.initData = [];
                     $scope.data = [];
                     $scope.passed = 0;
@@ -77,17 +78,22 @@
                         $scope.passed = pass;
                         $scope.failed = fail;
                         $scope.total = total;
-                        if (!$scope.loading && !$scope.staticTotals) {
+                        if ((!$scope.loading && !$scope.staticTotals) || refreshCounts) {
                             $scope.staticTotals = {
                                 passed: pass,
                                 failed: fail,
                                 total: total
                             };
+                            refreshCounts = false;
                         }
                     });
                     $scope.filterOptions = {
                         filterText: ''
                     };
+
+                    $scope.$on('refresh', function() {
+                        refreshCounts = true;
+                    });
 
                     $scope.aggregate = function(row) {
                         if (row.field === 'package' || row.field === 'class_name') {
@@ -386,6 +392,7 @@
             };
             getResult();
             $scope.refresh = function() {
+                $scope.$emit('refresh');
                 getResult();
             };
         }]);

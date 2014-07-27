@@ -28,9 +28,7 @@ gulp.task('less', function() {
 
 gulp.task('templates', function() {
     //combine all template files of the app into a js file
-    gulp.src(['!./app/index.html',
-        './app/**/*.html'
-    ])
+    gulp.src(['./app/**/*.html'])
         .pipe(plugins.angularTemplatecache('templates.js', {
             standalone: true
         }))
