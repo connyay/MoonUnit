@@ -15,7 +15,11 @@
         <dt>Time</dt>
         <dd>{{test.time | number:2}}</dd>
         <dt>Result</dt>
-        <dd>{{test.result | capitalize}}</dd>
+        <dd>
+            <span class="label" ng-class="{'label-danger': test.result === 'fail', 'label-warning': test.result === 'error'}">
+                {{test.result | capitalize}}
+            </span>
+        </dd>
     </dl>
     <pre class="md-text">{{test.log}}</pre>
 </div>
