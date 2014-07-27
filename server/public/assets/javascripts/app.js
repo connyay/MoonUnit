@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
+    angular.module('moonunit', ['ngRoute', 'ngAnimate', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
         .config(["$routeProvider", function($routeProvider) {
             $routeProvider
                 .otherwise({
@@ -322,13 +322,13 @@
         .filter('capitalize', function() {
             return function(input, scope) {
                 return input.substring(0, 1).toUpperCase() + input.substring(1);
-            }
+            };
         });
 })();
 
 (function() {
     'use strict';
-    angular.module('moonunit.ui', ['moonunit.ui.directives', 'moonunit.ui.filters'])
+    angular.module('moonunit.ui', ['moonunit.ui.directives', 'moonunit.ui.filters']);
 })();
 
 (function() {

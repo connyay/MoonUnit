@@ -40,6 +40,7 @@ gulp.task('vendorJS', function() {
     gulp.src([
         './bower_components/jquery/jquery.js',
         './bower_components/angular/angular.js',
+        './bower_components/angular-animate/angular-animate.js',
         './bower_components/angular-route/angular-route.js',
         './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
         './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
