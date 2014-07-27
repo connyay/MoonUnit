@@ -338,9 +338,9 @@
         .controller('ListCtrl', ["$scope", "Data", function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
-                Data.getUsers().then(function(response) {
+                Data.getUsers().success(function(users) {
                     $scope.loading = false;
-                    $scope.users = response.data;
+                    $scope.users = users;
                 });
             };
             getUsers();
@@ -355,8 +355,7 @@
             $scope.isSmoke = isSmoke;
             $scope.pagination = Pagination.getNew(15);
             var getUser = function() {
-                Data.getUser(username).then(function(response) {
-                    var user = response.data;
+                Data.getUser(username).success(function(user) {
                     $scope.loading = false;
                     $scope.user = user;
                     $scope.test_runs = user.test_runs;
@@ -381,14 +380,14 @@
 
             $scope.deleteRun = function(test_run) {
                 Data.deleteTestRun(username, test_run.id)
-                    .then(function() {
+                    .success(function() {
                         $scope.test_runs.splice($scope.test_runs.indexOf(test_run), 1);
                     });
             };
             $scope.saveEdit = function(test_run, value) {
                 return Data.updateTestRun(username, test_run.id, {
                     'build_id': value
-                }).then(function() {
+                }).success(function() {
                     test_run.build_id = value;
                 });
             };
@@ -406,8 +405,7 @@
             $scope.loading = true;
             var getResult = function() {
                 Data.getTestRun(username, $routeParams.id)
-                    .then(function(response) {
-                        var result = response.data;
+                    .success(function(result) {
                         $scope.loading = false;
                         $scope.result = result;
                         $scope.data = $scope.initData = result.test_results;
