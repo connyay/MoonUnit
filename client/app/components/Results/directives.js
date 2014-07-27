@@ -6,7 +6,7 @@
             return {
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-table.html',
-                controller: function($scope, $filter) {
+                controller: function($scope, $filter, $modal) {
                     var refreshCounts = false;
                     $scope.initData = [];
                     $scope.data = [];
@@ -89,6 +89,21 @@
                             return pass + ' Passed | ' + fail + ' Failed';
                         }
                     };
+                    $scope.viewLog = function(test) {
+                        $modal.open({
+                            templateUrl: 'components/Results/templates/log-modal.html',
+                            controller: function($scope, $modalInstance, test) {
+                                $scope.test = test;
+                                $scope.modalInstance = $modalInstance;
+                            },
+                            resolve: {
+                                'test': function() {
+                                    return test;
+                                }
+                            },
+                            size: 'lg',
+                        });
+                    };
                     $scope.gridOptions = {
                         data: 'data',
                         showGroupPanel: true,
@@ -114,7 +129,8 @@
                             displayName: 'Result',
                             cellTemplate: '<div class="ngCellText text-center colt{{$index}}">' +
                                 '<span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] === \'fail\', \'label-warning\': row.entity[col.field] === \'error\'}">' +
-                                '<i ng-if="row.entity.log" class="fa fa-file-o"></i> {{row.entity[col.field] | capitalize}}' +
+                                '<a href ng-if="row.entity.log" title="View Log" ng-click="viewLog(row.entity)"><i class="fa fa-file-o"></i> {{row.entity[col.field] | capitalize}}</a>' +
+                                '<span ng-if="!row.entity.log">{{row.entity[col.field] | capitalize}}</span>' +
                                 '</span></div>'
                         }],
                         filterOptions: $scope.filterOptions,
@@ -136,7 +152,7 @@
                 controller: function($scope, $modal) {
                     $scope.delete = function(test_run, ev) {
                         var modalInstance = $modal.open({
-                            templateUrl: 'result-list-modal.html',
+                            templateUrl: 'components/Results/templates/result-list-modal.html',
                             controller: function($scope, $modalInstance, test_run) {
                                 $scope.test_run = test_run;
                                 $scope.ok = function() {
