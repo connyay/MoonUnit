@@ -97,6 +97,7 @@
                     };
 
                     $scope.$on('refresh', function() {
+                        $scope.radioFilter = 'all';
                         refreshCounts = true;
                     });
 
