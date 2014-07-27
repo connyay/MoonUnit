@@ -9,7 +9,9 @@ gulp.task('scripts', function() {
     gulp.src(['!./app/**/*_test.js', '!./app/assets/**/*.js', './app/**/*.js'])
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
-        .pipe(plugins.concat('app.js'))
+        .pipe(plugins.ngAnnotate())
+    //.pipe(plugins.uglify())
+    .pipe(plugins.concat('app.js'))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
@@ -26,9 +28,7 @@ gulp.task('less', function() {
 
 gulp.task('templates', function() {
     //combine all template files of the app into a js file
-    gulp.src(['!./app/index.html',
-        './app/**/*.html'
-    ])
+    gulp.src(['./app/**/*.html'])
         .pipe(plugins.angularTemplatecache('templates.js', {
             standalone: true
         }))
@@ -40,13 +40,12 @@ gulp.task('vendorJS', function() {
     gulp.src([
         './bower_components/jquery/jquery.js',
         './bower_components/angular/angular.js',
+        './bower_components/angular-animate/angular-animate.js',
         './bower_components/angular-route/angular-route.js',
-        './bower_components/angular-resource/angular-resource.js',
         './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
         './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
         './bower_components/ng-grid/build/ng-grid.js',
-        './bower_components/ng-simplePagination/simplePagination.js',
-        './bower_components/angular-window-events/window_event_broadcasts.js'
+        './bower_components/ng-simplePagination/simplePagination.js'
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())

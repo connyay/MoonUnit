@@ -4,6 +4,7 @@
             <label class="btn btn-default btn-sm" ng-model="radioFilter" btn-radio="'all'">{{!loading ? staticTotals.total : ''}} All</label>
             <label class="btn btn-success btn-sm" ng-model="radioFilter" btn-radio="'pass'">{{!loading ? staticTotals.passed : ''}} Passed</label>
             <label class="btn btn-danger btn-sm" ng-model="radioFilter" btn-radio="'fail'">{{!loading ? staticTotals.failed : ''}} Failed</label>
+            <label class="btn btn-warning btn-sm" ng-model="radioFilter" btn-radio="'error'">{{!loading ? staticTotals.errored : ''}} Errored</label>
         </div>
     </div>
     <div class="col-lg-2 col-md-5 col-sm-6 col-xs-6">
@@ -15,6 +16,8 @@
 
 <div class="progress lg" ng-if="!loading">
     <div class="progress-bar progress-bar-danger" style="width: {{(failed / total) * 100}}%" tooltip="{{failed}} Failed">
+    </div>
+    <div class="progress-bar progress-bar-warning" style="width: {{(errored / total) * 100}}%" tooltip="{{errored}} Errored">
     </div>
     <div class="progress-bar progress-bar-success" style="width: {{(passed / total) * 100}}%" tooltip="{{passed}} Passed">
     </div>

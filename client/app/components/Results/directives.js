@@ -7,6 +7,7 @@
                 restrict: 'E',
                 templateUrl: 'components/Results/templates/results-table.html',
                 controller: function($scope, $filter) {
+                    var refreshCounts = false;
                     $scope.initData = [];
                     $scope.data = [];
                     $scope.passed = 0;
@@ -25,29 +26,40 @@
                     $scope.$watch('data', function(data) {
                         var pass = 0,
                             fail = 0,
+                            error = 0,
                             i = 0,
                             total = data.length;
                         for (i = 0; i < total; i++) {
                             if (data[i].result === 'pass') {
                                 pass++;
-                            } else {
+                            } else if (data[i].result === 'fail') {
                                 fail++;
+                            } else if (data[i].result === 'error') {
+                                error++;
                             }
                         }
                         $scope.passed = pass;
                         $scope.failed = fail;
+                        $scope.errored = error;
                         $scope.total = total;
-                        if (!$scope.loading && !$scope.staticTotals) {
+                        if ((!$scope.loading && !$scope.staticTotals) || refreshCounts) {
                             $scope.staticTotals = {
                                 passed: pass,
                                 failed: fail,
-                                total: total
+                                total: total,
+                                errored: error
                             };
+                            refreshCounts = false;
                         }
                     });
                     $scope.filterOptions = {
                         filterText: ''
                     };
+
+                    $scope.$on('refresh', function() {
+                        $scope.radioFilter = 'all';
+                        refreshCounts = true;
+                    });
 
                     $scope.aggregate = function(row) {
                         if (row.field === 'package' || row.field === 'class_name') {
@@ -100,7 +112,10 @@
                         }, {
                             field: 'result',
                             displayName: 'Result',
-                            cellTemplate: '<div class="ngCellText text-center colt{{$index}}"><span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] !== \'pass\'}">{{ row.entity[col.field] === \'pass\' ? \'Pass\' : \'Fail\'}}</span></div>'
+                            cellTemplate: '<div class="ngCellText text-center colt{{$index}}">' +
+                                '<span class="label" ng-class="{\'label-success\': row.entity[col.field] === \'pass\', \'label-danger\': row.entity[col.field] === \'fail\', \'label-warning\': row.entity[col.field] === \'error\'}">' +
+                                '<i ng-if="row.entity.log" class="fa fa-file-o"></i> {{row.entity[col.field] | capitalize}}' +
+                                '</span></div>'
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
