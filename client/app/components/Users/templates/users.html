@@ -1,0 +1,22 @@
+<ol class="breadcrumb">
+    <li class="active">Users</li>
+</ol>
+<div class="page-header">
+    <refresh></refresh>
+    <h2>Users</h2>
+</div>
+
+<filter></filter>
+
+<ul class="list-unstyled">
+    <li ng-repeat="user in users | filter:filterText" class="animate-repeat">
+        <h4><a ng-href="#/users/{{user.name}}">{{user.name}}</a>
+            <small ng-if="user.test_runs.length">
+                <ng-pluralize count="user.test_runs.length" when="{
+                     'one': '(1 build)',
+                     'other': '({} builds)'}">
+                </ng-pluralize>
+            </small>
+        </h4>
+    </li>
+</ul>

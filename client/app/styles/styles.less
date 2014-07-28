@@ -1,0 +1,88 @@
+body {
+	padding-top: 80px;
+}
+
+.page-header {
+	margin-top: 20px;
+}
+
+.test-results {
+	height: 500px;
+	border: 1px solid @gray-lighter;
+}
+
+.ngCanvas {
+   width: 100% !important;
+   overflow-x: hidden;
+}
+.ngRow {
+   width: 100% !important;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.result-list {
+	min-height: 450px;
+}
+
+.disabled {
+	cursor: not-allowed;
+	color: #999;
+	text-decoration: none;
+}
+
+.btn-link.dropdown-toggle {
+	color: #000;
+}
+
+.label a {
+    color: #FFF;
+}
+
+.md-text {
+    font-size: .65em;
+}
+
+.m-r-sm {
+    margin-right: 5px;
+}
+
+.progress.lg {
+	height: 15px;
+}
+
+*[ng-view].ng-enter {
+    transition: all 0.2s linear;
+    opacity: 0;
+}
+
+*[ng-view].ng-enter-active {
+    opacity: 1;
+}
+
+.animate-repeat {
+  line-height:40px;
+  list-style:none;
+  box-sizing:border-box;
+}
+
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+  max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
+  max-height:40px;
+}

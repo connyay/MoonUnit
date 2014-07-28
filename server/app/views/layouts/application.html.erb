@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MoonUnit</title>
+  
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" type="text/css" href="assets/stylesheets/styles.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/stylesheets/font-awesome.min.css">
+  <%= csrf_meta_tags %>
+</head>
+<body ng-app="moonunit">
+
+    <main-nav></main-nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+	                <section ng-view></section>
+	            </div>
+	        </div>
+    </div>
+
+<script src="assets/javascripts/lib.js"></script>
+<script src="assets/javascripts/templates.js"></script>
+<script src="assets/javascripts/app.js"></script>
+</body>
+</html>

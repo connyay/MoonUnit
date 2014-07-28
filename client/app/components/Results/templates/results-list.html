@@ -1,0 +1,27 @@
+<loading ng-if="loading"></loading>
+<ul class="list-unstyled" ng-if="!loading">
+    <li ng-repeat="test_run in test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage as results" class="animate-repeat">
+        <h4>
+            <span ng-if="!test_run.locked">
+                <span class="dropdown" ng-hide="view.editorEnabled">
+                    <button type="button" class="btn btn-link btn-xs dropdown-toggle"><i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href clip-copy="getXmlLink(test_run)"><i class="fa fa-link"></i> Copy XML Link</a>
+                        </li>
+                        <li><a href ng-click="edit(test_run, test_run.build_id)"><i class="fa fa-pencil"></i> Edit</a>
+                        </li>
+                        <li><a href ng-click="delete(test_run, $event)"><i class="fa fa-trash-o"></i> Delete</a>
+                        </li>
+                    </ul>
+                </span>
+                <inline-edit><a ng-href="#/{{getPrefix()}}/{{test_run.id}}">{{test_run.build_id}}</a>
+                </inline-edit>
+            </span>
+            <span class="disabled" ng-if="test_run.locked">{{test_run.build_id}}</span>
+            <small ng-hide="view.editorEnabled">({{test_run.created_at | date:'short'}})</small>
+        </h4>
+    </li>
+    <li ng-if="!loading && !user.test_runs.length" class="animate-repeat">No builds found</li>
+    <li ng-if="user.test_runs.length && !results.length" class="animate-repeat">No builds match</li>
+</ul>

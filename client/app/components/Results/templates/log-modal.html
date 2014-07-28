@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="modalInstance.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{test.name}}</h4>
+</div>
+<div class="modal-body">
+    <dl class="dl-horizontal">
+        <dt>Package</dt>
+        <dd>{{test.package}}</dd>
+        <dt>Class</dt>
+        <dd>{{test.class_name}}</dd>
+        <dt>Name</dt>
+        <dd>{{test.name}}</dd>
+        <dt>Time</dt>
+        <dd>{{test.time | number:2}}</dd>
+        <dt>Result</dt>
+        <dd>
+            <span class="label" ng-class="{'label-danger': test.result === 'fail', 'label-warning': test.result === 'error'}">
+                {{test.result | capitalize}}
+            </span>
+        </dd>
+    </dl>
+    <pre class="md-text">{{test.log}}</pre>
+</div>

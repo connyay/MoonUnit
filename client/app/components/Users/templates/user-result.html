@@ -1,0 +1,30 @@
+<ol class="breadcrumb" ng-if='isSmoke'>
+    <li>
+        <a href="#/smoke-builds">Smoke Builds</a>
+    </li>
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
+</ol>
+<ol class="breadcrumb" ng-if='!isSmoke'>
+    <li>
+        <a href="#/users">Users</a>
+    </li>
+    <li>
+        <a href="#/users/{{user}}">{{user}}</a>
+    </li>
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
+</ol>
+<div class="page-header">
+    <refresh></refresh>
+    <button type="button" class="btn btn-primary btn-sm pull-right m-r-sm" clip-copy="getXmlLink()" title="Copy XML Link">
+        <span class="fa fa-link"></span>
+    </button>
+    <h2>{{ isSmoke ? 'Smoke Build' : 'Test Results' }}
+        <small tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}</small>
+    </h2>
+</div>
+
+<result-table></result-table>
