@@ -197,5 +197,15 @@
                     };
                 }
             };
+        })
+        .directive('resultSummary', function() {
+            return {
+                restrict: 'E',
+                templateUrl: 'components/Results/templates/result-summary.html',
+                controller: function($scope) {
+
+                }
+
+            };
         });
 })();
