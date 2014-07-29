@@ -2,18 +2,18 @@
     <li class='active'>Smoke Builds</li>
     <li ng-if='!isSmoke'><a href="#/users">Users</a>
     </li>
-    <li ng-if='!isSmoke' class="active">{{user.name}}</li>
+    <li ng-if='!isSmoke' class="active">{{username}}</li>
 </ol>
 <ol class="breadcrumb" ng-if='!isSmoke'>
     <li ><a href="#/users">Users</a>
     </li>
-    <li class="active">{{user.name}}</li>
+    <li class="active">{{username}}</li>
 </ol>
 <div class="page-header">
     <refresh></refresh>
     <h2 ng-if='isSmoke'>Smoke Builds</h2>
     <h2 ng-if='!isSmoke'>User
-        <small>{{user.name}}</small>
+        <small>{{username}}</small>
     </h2>
 </div>
 

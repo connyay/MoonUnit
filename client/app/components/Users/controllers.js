@@ -18,6 +18,7 @@
         .controller('ShowCtrl', function($scope, $routeParams, Data, Pagination, $timeout, SMOKE_USER, isSmoke) {
             var attempts = 0;
             var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.username = username;
             $scope.loading = true;
             $scope.isSmoke = isSmoke;
             $scope.pagination = Pagination.getNew(15);

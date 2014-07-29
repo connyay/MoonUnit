@@ -368,6 +368,36 @@
                     };
                 }]
             };
+        })
+        .directive('resultLabel', function() {
+            return {
+                restrict: 'E',
+                scope: {
+                    result: '=result',
+                    count: '=count',
+                },
+                templateUrl: 'components/UI/result-label.html',
+                controller: ["$scope", "$filter", function($scope, $filter) {
+                    var msg;
+                    if (angular.isDefined($scope.count)) {
+                        msg = +$scope.count;
+                        switch ($scope.result) {
+                            case 'pass':
+                                msg += ' Passed';
+                                break;
+                            case 'error':
+                                msg += ' Errored';
+                                break;
+                            case 'fail':
+                                msg += ' Failed';
+                                break;
+                        }
+                    } else {
+                        msg = $filter('capitalize')($scope.result);
+                    }
+                    $scope.text = msg;
+                }]
+            };
         });
 })();
 
@@ -406,6 +436,7 @@
         .controller('ShowCtrl', ["$scope", "$routeParams", "Data", "Pagination", "$timeout", "SMOKE_USER", "isSmoke", function($scope, $routeParams, Data, Pagination, $timeout, SMOKE_USER, isSmoke) {
             var attempts = 0;
             var username = isSmoke ? SMOKE_USER : $routeParams.username;
+            $scope.username = username;
             $scope.loading = true;
             $scope.isSmoke = isSmoke;
             $scope.pagination = Pagination.getNew(15);
