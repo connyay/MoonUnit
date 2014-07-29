@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 		
 		#We have to check here since find by doesnt throw the recordNotFound exception
 		if user
-			render :json => user, :status => :ok
+			render :json => user, :status => :ok, :user_name => user.name
 		else
 			render :json => {:error => "User #{params[:name]} not found"}, :status => :not_found
 		end

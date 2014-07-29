@@ -5,7 +5,8 @@ class TestRunsController < ApplicationController
 	rescue_from ActiveRecord::RecordNotFound , :with => :not_found
 
 	def index
-		test_runs = TestRun.all
+		test_runs = User.includes(:test_runs).find_by(:name => params[:user_name]).test_runs
+		render :json => test_runs, :status => :ok, each_serializer: TestRunShortSerializer, :user_name => params[:user_name], :root => "test_runs"
 	end
 
 	def show
