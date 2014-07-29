@@ -16,7 +16,7 @@ class TestRunsController < ApplicationController
 		end
 		respond_to do |format|
 			format.xml{render :xml => buildXmlReport(test_run), :status => :ok}
-			format.any(:html, :json) {render :json => test_run, :status => :ok}
+			format.any(:html, :json) {render :json => test_run, :status => :ok, :user_name => params[:user_name]}
 		end
 	end
 
