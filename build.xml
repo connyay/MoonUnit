@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="MoonUnit">
+  <target name="clean">
+  </target>
+  
+  <target name="build" />
+  
+  <target name="cleanall" depends="clean" />  
+</project>

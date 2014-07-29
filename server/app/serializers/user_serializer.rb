@@ -13,5 +13,6 @@ class UserSerializer < ActiveModel::Serializer
 		else
 			object.cache_key
 		end
+
 	end
 end
