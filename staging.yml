@@ -1,5 +1,5 @@
 ---
-domain: stage1.mybluemix.net
+domain: mybluemix.net
 disk: 246M
 mem: 512M
 instances: 1
@@ -10,4 +10,5 @@ applications:
   #buildpack: https://github.com/heroku/heroku-buildpack-ruby.git
   buildpack: https://github.com/ibmdb/db2rubybuildpack.git
   services:
-  - moonunit-stg-db2
+  - moonunit-db2-stage
+  - moonunit-memcached-stage
