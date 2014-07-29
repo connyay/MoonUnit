@@ -136,7 +136,8 @@
                         }, {
                             field: 'name',
                             displayName: 'Test Name',
-                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">{{ row.entity[col.field]}}</div>',
+                            cellTemplate: '<div class="ngCellText colt{{$index}}" tooltip="{{ row.entity[col.field]}}" tooltip-append-to-body="true" tooltip-popup-delay="250">' +
+                            '<a ng-href="#/users/{{user}}/test_results/{{row.entity.id}}/history">{{ row.entity[col.field]}}</a></div>',
                             width: '**',
                         }, {
                             field: 'time',

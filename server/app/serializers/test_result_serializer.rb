@@ -1,5 +1,5 @@
 class TestResultSerializer < ActiveModel::Serializer
-  attributes :result, :time, :package, :class_name, :name, :log
+  attributes :id, :result, :time, :package, :class_name, :name, :log
 
 
 
