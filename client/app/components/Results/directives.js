@@ -153,7 +153,7 @@
                         }],
                         filterOptions: $scope.filterOptions,
                         enableRowSelection: false,
-                        groups: ['package'],
+                        groups: ['class_name'],
                         aggregateTemplate: '<div ng-click="row.toggleExpand()" ng-style="rowStyle(row)" class="ngAggregate">' +
                             '   <span class="ngAggregateText">{{row.label CUSTOM_FILTERS}} ({{row.totalChildren()}}{{AggItemsLabel}})</span><div class="text-right ngCellText">{{aggregate(row)}}</div>' +
                             '   <div class="{{row.aggClass()}}"></div>' +
