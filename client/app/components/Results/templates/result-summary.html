@@ -1,5 +1,5 @@
 <p class="result-summary">
-    <span class="label label-success">{{test_run.pass}} Passed</span>
-    <span class="label label-warning">{{test_run.error}} Errored</span>
-    <span class="label label-danger">{{test_run.fail}} Failed</span>
+    <result-label data-result="'pass'" data-count="test_run.pass"></result-label>
+    <result-label data-result="'error'" data-count="test_run.error"></result-label>
+    <result-label data-result="'fail'" data-count="test_run.fail"></result-label>
 </p>

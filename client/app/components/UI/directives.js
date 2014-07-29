@@ -108,5 +108,35 @@
                     };
                 }
             };
+        })
+        .directive('resultLabel', function() {
+            return {
+                restrict: 'E',
+                scope: {
+                    result: '=result',
+                    count: '=count',
+                },
+                templateUrl: 'components/UI/result-label.html',
+                controller: function($scope, $filter) {
+                    var msg;
+                    if (angular.isDefined($scope.count)) {
+                        msg = +$scope.count;
+                        switch ($scope.result) {
+                            case 'pass':
+                                msg += ' Passed';
+                                break;
+                            case 'error':
+                                msg += ' Errored';
+                                break;
+                            case 'fail':
+                                msg += ' Failed';
+                                break;
+                        }
+                    } else {
+                        msg = $filter('capitalize')($scope.result);
+                    }
+                    $scope.text = msg;
+                }
+            };
         });
 })();
