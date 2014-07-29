@@ -1,0 +1,8 @@
+{
+  "name": "MoonUnit",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-execute": "~0.2.2"
+  }
+}

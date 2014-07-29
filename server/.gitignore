@@ -15,5 +15,5 @@
 /log/*.log
 /tmp
 
-#ignore swagger docs
-/public/api/*
+/public/assets/javascripts/*
+/public/assets/stylesheets/styles.min.css
