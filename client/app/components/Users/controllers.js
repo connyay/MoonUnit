@@ -92,6 +92,8 @@
         }).controller('ShowResultHistoryCtrl', function($scope, $routeParams, isSmoke, Data){
             var username = isSmoke ? SMOKE_USER : $routeParams.username,
                 id = $routeParams.id;
+
+            $scope.username = username;
             var getResultHistory = function() {
                 Data.getResultHistory(username, id)
                     .success(function(result_history) {

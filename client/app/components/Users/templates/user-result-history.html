@@ -1,10 +1,40 @@
+<ol class="breadcrumb" ng-if='isSmoke'>
+    <li>
+        <a href="#/smoke-builds">Smoke Builds</a>
+    </li>
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
+</ol>
+<ol class="breadcrumb" ng-if='!isSmoke'>
+    <li>
+        <a href="#/users">Users</a>
+    </li>
+    <li>
+        <a href="#/users/{{username}}">{{username}}</a>
+    </li>
+    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
+        <loading size="small"></loading>
+    </li>
+</ol>
+
+<div class="page-header">
+    <refresh></refresh>
+    <button type="button" class="btn btn-primary btn-sm pull-right m-r-sm" clip-copy="getXmlLink()" title="Copy XML Link">
+        <span class="fa fa-link"></span>
+    </button>
+    <h2> History
+        <small tooltip="{{date}}" tooltip-placement="right"> {{result_history[0].name}} </small>
+    </h2>
+</div>
+
 <table class="table table-hover table-striped">
 	<th>Build</th> 
-	<th>Test Case</th>
+	<th>Time</th>
 	<th>Result</th>
 	<tr ng-repeat="test_result in result_history">
 		<td>{{test_result.build_id}}</td>
-		<td>{{test_result.package}}.{{test_result.class_name}}.{{test_result.name}}</td>
-		<td>{{test_result.result}}</td>
+		<td>{{test_result.time}}s</td>
+		<td><result-label data-result="test_result.result"></result-label> </td>
 	</tr>
 </table>
