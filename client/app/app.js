@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit', ['ngRoute', 'ngAnimate', 'ngClipboard', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
+    angular.module('moonunit', ['ngRoute', 'ngAnimate', 'angles', 'ngClipboard', 'templates', 'moonunit.users', 'moonunit.ui', 'ui.bootstrap', 'simplePagination'])
         .config(function($routeProvider) {
             $routeProvider
                 .otherwise({
