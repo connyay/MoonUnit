@@ -2,8 +2,9 @@ class TestResultsHistoryController < ApplicationController
 
 	def show
 		test_result = TestResult.find(params[:test_result_id])
-		test = Test.includes(test_results: [:test_run]).find(test_result.test_id)
-		render :json => test_result.test.test_results, :status => :ok, :include_build_id => true
+		user = User.find_by(:name => params[:user_name])
+		results = TestResult.includes(:test_run, :test).where(:test_id => test_result.test_id, 'test_runs.user_id' => user.id)
+		render :json => results, :status => :ok, :include_build_id => true
 	end
 
 	def default_serializer_options
