@@ -37,7 +37,10 @@
                 },
                 updateTestRun: function(username, testRunID, data) {
                     return $http.put(urlBase + '/' + username + '/test_runs/' + testRunID, data);
-                }
+                },
+                getResultHistory: function(username, testResultId){
+                    return $http.get(urlBase + '/' + username + '/test_results/' + testResultId + '/history');
+                },
             };
         }]);
 
@@ -473,6 +476,18 @@
             $scope.getXmlLink = function() {
                 return window.location.protocol + "//" + window.location.host + '/users/' + username + '/test_runs/' + id + '.xml';
             };
+        }]).controller('ShowResultHistoryCtrl', ["$scope", "$routeParams", "isSmoke", "Data", function($scope, $routeParams, isSmoke, Data){
+            var username = isSmoke ? SMOKE_USER : $routeParams.username,
+                id = $routeParams.id;
+            var getResultHistory = function() {
+                Data.getResultHistory(username, id)
+                    .success(function(result_history) {
+                        $scope.result_history = result_history;
+                });
+
+            };
+
+            getResultHistory();
         }]);
 
 })();
@@ -487,7 +502,8 @@
     var templates = {
         users: 'components/Users/templates/users.html',
         user: 'components/Users/templates/user.html',
-        result: 'components/Users/templates/user-result.html'
+        result: 'components/Users/templates/user-result.html',
+        result_history: 'components/Users/templates/user-result-history.html',
     };
     angular.module('moonunit.users', ['ngRoute', 'moonunit.users.controllers'])
         .config(["$routeProvider", function($routeProvider) {
@@ -513,6 +529,10 @@
                     templateUrl: templates.result,
                     controller: 'ShowResultCtrl',
                     resolve: smokeBuildObj
+                })
+                .when('/users/:username/test_results/:id/history', {
+                    templateUrl: templates.result_history,
+                    controller: 'ShowResultHistoryCtrl'
                 });
         }])
         .factory('isSmoke', function() {

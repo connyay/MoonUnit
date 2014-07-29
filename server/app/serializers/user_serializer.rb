@@ -1,18 +1,8 @@
 class UserSerializer < ActiveModel::Serializer
-	cached
-	attributes :name
+	attributes :name, :test_run_count
 
-	#Eventually we will probably remove this in favor of a counts
-	#But it would break rm tools view junit results button
-	has_many :test_runs, serializer: TestRunShortSerializer
-
-
-	def cache_key
-		if options[:user_name]
-			return "wu-#{object.cache_key}"
-		else
-			object.cache_key
-		end
-
+	def test_run_count
+		return object.test_runs.count
 	end
+
 end

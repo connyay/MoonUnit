@@ -1,0 +1,10 @@
+<table class="table table-hover table-striped">
+	<th>Build</th> 
+	<th>Test Case</th>
+	<th>Result</th>
+	<tr ng-repeat="test_result in result_history">
+		<td>{{test_result.build_id}}</td>
+		<td>{{test_result.package}}.{{test_result.class_name}}.{{test_result.name}}</td>
+		<td>{{test_result.result}}</td>
+	</tr>
+</table>

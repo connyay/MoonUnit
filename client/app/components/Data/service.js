@@ -18,7 +18,10 @@
                 },
                 updateTestRun: function(username, testRunID, data) {
                     return $http.put(urlBase + '/' + username + '/test_runs/' + testRunID, data);
-                }
+                },
+                getResultHistory: function(username, testResultId){
+                    return $http.get(urlBase + '/' + username + '/test_results/' + testResultId + '/history');
+                },
             };
         });
 
