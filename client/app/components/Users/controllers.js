@@ -89,7 +89,8 @@
             $scope.getXmlLink = function() {
                 return window.location.protocol + "//" + window.location.host + '/users/' + username + '/test_runs/' + id + '.xml';
             };
-        }).controller('ShowResultHistoryCtrl', function($scope, $routeParams, isSmoke, Data){
+        })
+        .controller('ShowResultHistoryCtrl', function($scope, $routeParams, SMOKE_USER, isSmoke, Data) {
             var username = isSmoke ? SMOKE_USER : $routeParams.username,
                 id = $routeParams.id;
 
@@ -98,8 +99,7 @@
                 Data.getResultHistory(username, id)
                     .success(function(result_history) {
                         $scope.result_history = result_history;
-                });
-
+                    });
             };
 
             getResultHistory();

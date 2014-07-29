@@ -47,7 +47,9 @@ gulp.task('vendorJS', function() {
         './bower_components/ng-grid/build/ng-grid.js',
         './bower_components/ng-simplePagination/simplePagination.js',
         './bower_components/ng-clip/src/ngClip.js',
-        './bower_components/zeroclipboard/dist/ZeroClipboard.js'
+        './bower_components/zeroclipboard/dist/ZeroClipboard.js',
+        './bower_components/chartjs/Chart.js',
+        './bower_components/angles/angles.js'
     ])
         .pipe(plugins.concat('lib.js'))
         .pipe(plugins.uglify())
