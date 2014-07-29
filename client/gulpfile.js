@@ -80,4 +80,5 @@ gulp.task('connect', plugins.connect.server({
     livereload: true
 }));
 
+gulp.task('build', ['less', 'scripts', 'templates', 'vendorJS']);
 gulp.task('default', ['connect', 'less', 'scripts', 'templates', 'vendorJS', 'watch']);
