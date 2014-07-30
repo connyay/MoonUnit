@@ -2,5 +2,7 @@
 
 cd client
 npm install
-./node_modules/gulp/bin/gulp.js bower
-./node_modules/gulp/bin/gulp.js build
+npm install -g bower
+npm install -g gulp
+bower install
+gulp build
