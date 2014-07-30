@@ -75,12 +75,10 @@ gulp.task('watch', function() {
 
 });
 
-gulp.task('connect', function() {
-    plugins.connect.server({
-        root: ['../server/public'],
-        port: 9000,
-        livereload: true
-    });
+gulp.task('connect', plugins.connect.server({
+    root: ['../server/public'],
+    port: 9000,
+    livereload: true
 });
 
 gulp.task('bower', function() {
