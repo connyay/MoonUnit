@@ -15,7 +15,7 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('less', function() {
+gulp.task('less', ['bower'], function() {
     //combine all js files of the app
     gulp.src('./app/styles/master.less')
         .pipe(plugins.less({
@@ -35,15 +35,15 @@ gulp.task('templates', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('vendorJS', function() {
+gulp.task('vendorJS', ['bower'], function() {
     //concatenate vendor JS files
     gulp.src([
         './bower_components/jquery/jquery.js',
         './bower_components/angular/angular.js',
         './bower_components/angular-animate/angular-animate.js',
         './bower_components/angular-route/angular-route.js',
-        './bower_components/angular-bootstrap/ui-bootstrap-0.11.1.js',
-        './bower_components/angular-bootstrap/ui-bootstrap-tpls-0.11.1.js',
+        './bower_components/angular-bootstrap/ui-bootstrap.js',
+        './bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
         './bower_components/ng-grid/build/ng-grid.js',
         './bower_components/ng-simplePagination/simplePagination.js',
         './bower_components/ng-clip/src/ngClip.js',
@@ -83,5 +83,10 @@ gulp.task('connect', function() {
     });
 });
 
-gulp.task('build', ['less', 'scripts', 'templates', 'vendorJS']);
+gulp.task('bower', function() {
+    return plugins.bower()
+        .pipe(gulp.dest('./bower_components'));
+});
+
+gulp.task('build', ['bower', 'less', 'scripts', 'templates', 'vendorJS']);
 gulp.task('default', ['connect', 'less', 'scripts', 'templates', 'vendorJS', 'watch']);
