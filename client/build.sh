@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd client
+set -o errexit # Exit on error
+
 npm install
-npm install -g bower
-npm install -g gulp
-bower install
+./node_modules/gulp/bin/gulp.js bower
+./node_modules/gulp/bin/gulp.js build
 gulp build
