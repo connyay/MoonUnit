@@ -25,13 +25,23 @@
     </h2>
 </div>
 
-<table class="table table-hover table-striped">
-	<th>Build</th> 
-	<th>Time</th>
-	<th>Result</th>
+<div class="text-center"> 
+    <loading ng-if="loading"></loading>
+    <canvas ng-if="!loading" linechart options="options" data="chart" height="300" width="500"></canvas>
+</div>
+
+<br><br>
+<table ng-if="!loading" class="table table-hover table-striped table-bordered">
+	<tr>
+        <th>#</th>
+        <th>Build</th> 
+    	<th>Time</th>
+    	<th style="text-align:center;">Result</th>
+    </tr>
 	<tr ng-repeat="test_result in result_history">
+        <td>{{result_history.length-$index}}</td>
 		<td>{{test_result.build_id}}</td>
 		<td>{{test_result.time}}s</td>
-		<td><result-label data-result="test_result.result"></result-label> </td>
+		<td align="center"><result-label data-result="test_result.result"></result-label> </td>
 	</tr>
 </table>

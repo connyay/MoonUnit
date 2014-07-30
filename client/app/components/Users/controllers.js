@@ -94,15 +94,37 @@
             var username = isSmoke ? SMOKE_USER : $routeParams.username,
                 id = $routeParams.id;
 
+            $scope.loading=true;
             $scope.username = username;
             var getResultHistory = function() {
                 Data.getResultHistory(username, id)
                     .success(function(result_history) {
+                        $scope.loading=false;
                         $scope.result_history = result_history;
+                        var result_data = [];
+                        var result_labels = [];
+                        for (var i=result_history.length-1; i >= 0; i--){
+                            result_labels.push(result_history.length - i);
+                            result_data.push(result_history[i].time);
+                        }
+
+                        $scope.chart = {
+                        labels : result_labels,
+                        datasets : [
+                            {
+                                fillColor : "#789DEC",
+                                strokeColor : "#789DEC",
+                                pointColor : "#789DEC",
+                                pointStrokeColor : "#789DEC",
+                                data : result_data
+                            }
+                        ], 
+                    };
                     });
             };
 
             getResultHistory();
+
         });
 
 })();
