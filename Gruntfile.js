@@ -1,7 +1,13 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({
-        shell: {      
+        shell: {    
+        	git: {        
+                command: function() {          
+                    grunt.log.writeln('Fixing git config');          
+                    return 'git config --global url."https://".insteadOf git://';        
+                }      
+            },  
             npm: {        
                 command: function() {          
                     grunt.log.writeln('Installing deps');          
@@ -25,6 +31,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('default', ['shell:npm', 'shell:bower', 'shell:build']);
+    grunt.registerTask('default', ['shell:git', 'shell:npm', 'shell:bower', 'shell:build']);
 
 };
