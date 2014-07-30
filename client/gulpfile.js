@@ -15,7 +15,7 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('less', function() {
+gulp.task('less', ['bower'], function() {
     //combine all js files of the app
     gulp.src('./app/styles/master.less')
         .pipe(plugins.less({
@@ -35,7 +35,7 @@ gulp.task('templates', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('vendorJS', function() {
+gulp.task('vendorJS', ['bower'], function() {
     //concatenate vendor JS files
     gulp.src([
         './bower_components/jquery/jquery.js',
@@ -88,5 +88,5 @@ gulp.task('bower', function() {
         .pipe(gulp.dest('./bower_components'));
 });
 
-gulp.task('build', ['less', 'scripts', 'templates', 'vendorJS']);
+gulp.task('build', ['bower', 'less', 'scripts', 'templates', 'vendorJS']);
 gulp.task('default', ['connect', 'less', 'scripts', 'templates', 'vendorJS', 'watch']);

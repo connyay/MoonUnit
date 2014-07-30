@@ -14,12 +14,6 @@ module.exports = function(grunt) {
                     return 'cd client; npm install';        
                 }      
             },
-            bower: {        
-                command: function() {          
-                    grunt.log.writeln('Installing bower');          
-                    return 'cd client; ./node_modules/gulp/bin/gulp.js bower';       
-                }      
-            },
             build: {        
                 command: function() {          
                     grunt.log.writeln('Running gulp');          
@@ -31,6 +25,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('default', ['shell:git', 'shell:npm', 'shell:bower', 'shell:build']);
+    grunt.registerTask('default', ['shell:git', 'shell:npm', 'shell:build']);
 
 };
