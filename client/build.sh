@@ -1,5 +1,5 @@
 #!/bin/bash
 
-npm install --silent
-./node_modules/bower/bin/bower install --silent
+npm install
+./node_modules/bower/bin/bower install
 ./node_modules/gulp/bin/gulp.js build
