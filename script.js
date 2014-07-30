@@ -1,4 +1,4 @@
 var sys = require('sys')
 var exec = require('child_process').exec;
 function puts(error, stdout, stderr) { sys.puts(stdout) }
-exec("./build.sh", puts);
+exec("cd client; ./build.sh", puts);

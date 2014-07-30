@@ -35,7 +35,7 @@ gulp.task('templates', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('vendorJS', ['bower'], function() {
+gulp.task('vendorJS', function() {
     //concatenate vendor JS files
     gulp.src([
         './bower_components/jquery/jquery.js',
@@ -84,7 +84,8 @@ gulp.task('connect', function() {
 });
 
 gulp.task('bower', function() {
-    return plugins.bower();
+    return plugins.bower()
+        .pipe(gulp.dest('./bower_components'));
 });
 
 gulp.task('build', ['less', 'scripts', 'templates', 'vendorJS']);
