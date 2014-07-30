@@ -1,4 +1,5 @@
 class TestRunShortSerializer < ActiveModel::Serializer
+	cached
 	attributes :id, :build_id, :locked, :created_at, :pass, :fail, :error
 
 	def pass
@@ -13,12 +14,18 @@ class TestRunShortSerializer < ActiveModel::Serializer
 		return object.test_results.where(:result => "error").count
 	end
 
+	def url
+		if options[:user_name]
+			name = options[:user_name]
+		else
+			name = object.user.name
+		end
 
-	#Only display the url if we pass in a user_name, we don't want to have to query for it if we dont need it
-	def attributes
-		data = super
-		data[:url] = url_for(controller: 'test_runs', action: 'show', id: object.id, :user_name => options[:user_name]) if options[:user_name]
-		return data
+		return url_for(controller: 'test_runs', action: 'show', id: object.id, :user_name => name)
+	end
+
+	def cache_key
+		object.cache_key
 	end
 
 end
