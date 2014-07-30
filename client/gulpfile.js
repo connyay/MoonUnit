@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var path = require('path');
+var debug = require('gulp-debug');
 var plugins = require("gulp-load-plugins")({
     lazy: false
 });
@@ -85,6 +86,7 @@ gulp.task('connect', function() {
 
 gulp.task('bower', function() {
     return plugins.bower()
+        .pipe(debug({verbose: true}))
         .pipe(gulp.dest('./bower_components'));
 });
 
