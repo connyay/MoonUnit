@@ -79,7 +79,7 @@ gulp.task('connect', plugins.connect.server({
     root: ['../server/public'],
     port: 9000,
     livereload: true
-});
+}));
 
 gulp.task('bower', function() {
     return plugins.bower()
