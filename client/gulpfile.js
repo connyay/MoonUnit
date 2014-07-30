@@ -35,7 +35,7 @@ gulp.task('templates', function() {
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
-gulp.task('vendorJS', function() {
+gulp.task('vendorJS', ['bower'], function() {
     //concatenate vendor JS files
     gulp.src([
         './bower_components/jquery/jquery.js',
@@ -81,6 +81,10 @@ gulp.task('connect', function() {
         port: 9000,
         livereload: true
     });
+});
+
+gulp.task('bower', function() {
+    return plugins.bower();
 });
 
 gulp.task('build', ['less', 'scripts', 'templates', 'vendorJS']);
