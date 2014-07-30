@@ -19,11 +19,11 @@
     "jquery": "1.10",
     "strapless": "~3.1.1",
     "ng-grid": "~2.0.11",
-    "angular-bootstrap": "https://github.com/connyay/bootstrap.git#gh-pages",
     "ng-simplePagination": "*",
     "angular-animate": "~1.2.21",
     "ng-clip": "~0.2.2",
-    "angles": "*"
+    "angles": "*",
+    "angular-bootstrap": "https://github.com/connyay/bootstrap-bower.git#~0.11.2"
   },
   "resolutions": {
     "angular": "~1.3.0"
