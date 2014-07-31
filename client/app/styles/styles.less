@@ -75,11 +75,15 @@ body {
   box-sizing:border-box;
 }
 
+.animate-repeat.ng-enter {
+  -webkit-transition:all linear 0.25s;
+  transition:all linear 0.25s;
+}
+
 .animate-repeat.ng-move,
-.animate-repeat.ng-enter,
 .animate-repeat.ng-leave {
-  -webkit-transition:all linear 0.5s;
-  transition:all linear 0.5s;
+  -webkit-transition:all linear 0.08s;
+  transition:all linear 0.08s;
 }
 
 .animate-repeat.ng-leave.ng-leave-active,
