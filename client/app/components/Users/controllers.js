@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives'])
+    angular.module('moonunit.users.controllers', ['moonunit.data', 'moonunit.results.directives', 'moonunit.charts'])
         .controller('ListCtrl', function($scope, Data) {
             $scope.loading = true;
             var getUsers = function() {
@@ -90,7 +90,7 @@
                 return window.location.protocol + "//" + window.location.host + '/users/' + username + '/test_runs/' + id + '.xml';
             };
         })
-        .controller('ShowResultHistoryCtrl', function($scope, $routeParams, SMOKE_USER, isSmoke, Data) {
+        .controller('ShowResultHistoryCtrl', function($scope, $routeParams, SMOKE_USER, isSmoke, Data, Charts) {
             var username = isSmoke ? SMOKE_USER : $routeParams.username,
                 id = $routeParams.id;
 
@@ -101,25 +101,8 @@
                     .success(function(result_history) {
                         $scope.loading=false;
                         $scope.result_history = result_history;
-                        var result_data = [];
-                        var result_labels = [];
-                        for (var i=result_history.length-1; i >= 0; i--){
-                            result_labels.push(result_history.length - i);
-                            result_data.push(result_history[i].time);
-                        }
+                        $scope.chartConfig = Charts.getExecutionTimeChart(result_history);
 
-                        $scope.chart = {
-                        labels : result_labels,
-                        datasets : [
-                            {
-                                fillColor : "#789DEC",
-                                strokeColor : "#789DEC",
-                                pointColor : "#789DEC",
-                                pointStrokeColor : "#789DEC",
-                                data : result_data
-                            }
-                        ], 
-                    };
                     });
             };
 

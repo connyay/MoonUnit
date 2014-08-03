@@ -23,7 +23,8 @@
     "ng-simplePagination": "*",
     "angular-animate": "~1.2.21",
     "ng-clip": "~0.2.2",
-    "angles": "*"
+    "highcharts" : "*",
+    "highcharts-ng" : "*"
   },
   "resolutions": {
     "angular": "~1.3.0"
