@@ -16,12 +16,11 @@
 
                 //Show the latest result times in the chart
                 var prev = null;
-                for (var a=1; a <= CHART_NUM; a++){
-                	var b = result_history.length - a;
-                	if (b<0) break;
+                var start = result_history.length > 10 ? CHART_NUM : result_history.length-1;
+                for (var a=start; a >= 0; a--){
 
-                	var test_result = result_history[b];
-                    result_labels.push(a);
+                	var test_result = result_history[a];
+                    result_labels.push(result_history.length-a);
                     chart_data[test_result.result].push(test_result.time);
 
                     //If there is a result transition we need to add the current result to both lists
