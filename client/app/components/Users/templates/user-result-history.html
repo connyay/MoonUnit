@@ -2,9 +2,6 @@
     <li>
         <a href="#/smoke-builds">Smoke Builds</a>
     </li>
-    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
-        <loading size="small"></loading>
-    </li>
 </ol>
 <ol class="breadcrumb" ng-if='!isSmoke'>
     <li>
@@ -12,9 +9,6 @@
     </li>
     <li>
         <a href="#/users/{{username}}">{{username}}</a>
-    </li>
-    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
-        <loading size="small"></loading>
     </li>
 </ol>
 
@@ -32,7 +26,7 @@
 <table ng-if="!loading" class="table table-hover table-striped table-bordered">
 	<tr>
         <th>#</th>
-        <th>Build</th> 
+        <th>Build</th>
     	<th>Time</th>
     	<th style="text-align:center;">Result</th>
     </tr>
