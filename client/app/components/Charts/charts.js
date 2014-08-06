@@ -94,13 +94,7 @@
 	                    title: {text: 'Seconds'}
 	                 },
 	                 //Whether to use HighStocks instead of HighCharts (optional). Defaults to false.
-	                 useHighStocks: false,
-	                 //size (optional) if left out the chart will default to size of the div or something sensible.
-	                 size: {
-	                   width: 400,
-	                   height: 300
-	                 },
-	                 
+	                 useHighStocks: false
 
 	            };
 		            return chartConfig;
