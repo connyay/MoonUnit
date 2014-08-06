@@ -4,7 +4,7 @@
 		.factory('Charts', function() {
 
 			//Show last ten items
-			var CHART_NUM = 10;
+			var CHART_NUM = 20;
 			var PASS_COLOR = '#18bc9c';
 			var FAIL_COLOR = '#e74c3c';
 			var ERROR_COLOR = '#F39C12';
@@ -16,7 +16,7 @@
 
                 //Show the latest result times in the chart
                 var prev = null;
-                var start = result_history.length > 10 ? CHART_NUM : result_history.length-1;
+                var start = (result_history.length > CHART_NUM) ? CHART_NUM : result_history.length-1;
                 for (var a=start; a >= 0; a--){
 
                 	var test_result = result_history[a];
