@@ -20,7 +20,7 @@
 </div>
 <div class="text-center">
     <loading ng-if="loading"></loading>
-    <highchart id="chart1" config="chartConfig" class="text-center"></highchart>
+    <highchart config="chartConfig" class="text-center" ng-if="!loading"></highchart>
 </div>
 <br><br>
 <table ng-if="!loading" class="table table-hover table-striped table-bordered">
