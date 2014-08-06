@@ -9,15 +9,87 @@
             var FAIL_COLOR = '#e74c3c';
             var ERROR_COLOR = '#F39C12';
 
-            return {
-                getExecutionTimeChart: function(result_history) {
-                    var chart_data = {
-                        pass: [],
-                        fail: [],
-                        error: []
-                    };
-                    var result_labels = [];
+			var chart_data = {
+				pass: [],
+				fail: [],
+				error: []
+			};
+            var result_labels = [];	
+		
+			var defaultChartConfig = {
+				//This is not a highcharts object. It just looks a little like one!
+				options: {
+					//This is the Main Highcharts chart config. Any Highchart options are valid here.
+					//will be ovverriden by values specified below.
+					chart: {
+						type: 'area'
+					},
+					legend: {
+						enabled: false
+					},
+					colors: [PASS_COLOR, FAIL_COLOR, ERROR_COLOR],
+					tooltip: {
+						style: {
+							padding: 10,
+							fontWeight: 'bold'
+						}
+					},
+					plotOptions: {
+						area: {
+							marker: {
+								enabled: true
+							},
+							fillOpacity: 1.0
+						}
+					}
+				},
 
+				//The below properties are watched separately for changes.
+
+				//Series object (optional) - a list of series using normal highcharts series options.
+				series: [{
+					name: "Pass",
+					data: chart_data.pass
+				}, {
+					name: "Fail",
+					data: chart_data.fail
+				}, {
+					name: "Error",
+					data: chart_data.error
+				}, ],
+				//Title configuration (optional)
+				title: {
+					text: 'Execution Time'
+				},
+				//Boolean to control showng loading status on chart (optional)
+				loading: false,
+				//Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
+				//properties currentMin and currentMax provied 2-way binding to the chart's maximimum and minimum
+				xAxis: {
+					categories: null
+				},
+				yAxis: {
+					title: {
+						text: 'Seconds'
+					}
+				},
+				//Whether to use HighStocks instead of HighCharts (optional). Defaults to false.
+				useHighStocks: false
+
+			};
+			
+            return {
+                getExecutionTimeChart: function(result_history, incomingChartConfigs) {
+
+					chart_data = {
+						pass: [],
+						fail: [],
+						error: []
+					};
+					result_labels = [];	
+				
+					var chartConfig = angular.copy(defaultChartConfig);
+					
                     //Show the latest result times in the chart
                     var prev = null;
                     var start = (result_history.length > CHART_NUM) ? CHART_NUM : result_history.length - 1;
@@ -39,70 +111,16 @@
 
                         prev = test_result;
                     }
-
-
-
-                    var chartConfig = {
-                        //This is not a highcharts object. It just looks a little like one!
-                        options: {
-                            //This is the Main Highcharts chart config. Any Highchart options are valid here.
-                            //will be ovverriden by values specified below.
-                            chart: {
-                                type: 'area'
-                            },
-                            legend: {
-                                enabled: false
-                            },
-                            colors: [PASS_COLOR, FAIL_COLOR, ERROR_COLOR],
-                            tooltip: {
-                                style: {
-                                    padding: 10,
-                                    fontWeight: 'bold'
-                                }
-                            },
-                            plotOptions: {
-                                area: {
-                                    marker: {
-                                        enabled: result_history.length == 1 ? true : false
-                                    },
-                                    fillOpacity: 1.0
-                                }
-                            }
-                        },
-
-                        //The below properties are watched separately for changes.
-
-                        //Series object (optional) - a list of series using normal highcharts series options.
-                        series: [{
-                            name: "Pass",
-                            data: chart_data.pass
-                        }, {
-                            name: "Fail",
-                            data: chart_data.fail
-                        }, {
-                            name: "Error",
-                            data: chart_data.error
-                        }, ],
-                        //Title configuration (optional)
-                        title: {
-                            text: 'Execution Time'
-                        },
-                        //Boolean to control showng loading status on chart (optional)
-                        loading: false,
-                        //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
-                        //properties currentMin and currentMax provied 2-way binding to the chart's maximimum and minimum
-                        xAxis: {
-                            categories: result_labels
-                        },
-                        yAxis: {
-                            title: {
-                                text: 'Seconds'
-                            }
-                        },
-                        //Whether to use HighStocks instead of HighCharts (optional). Defaults to false.
-                        useHighStocks: false
-
-                    };
+					
+					// Populate some of the default chart options with incoming data
+					chartConfig.options.plotOptions.area.marker.enabled = result_history.length === 1 ? true : false;
+					chartConfig.xAxis.categories = result_labels;
+					
+					// Override the default chart values with the incomingChartConfigs, if any
+					if (incomingChartConfigs) {
+						angular.extend(chartConfig, incomingChartConfigs);
+					}
+					
                     return chartConfig;
                 }
             };
