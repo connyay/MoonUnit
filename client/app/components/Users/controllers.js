@@ -93,6 +93,7 @@
         .controller('ShowResultHistoryCtrl', function($scope, $routeParams, SMOKE_USER, isSmoke, Data, Charts) {
             var username = isSmoke ? SMOKE_USER : $routeParams.username,
                 id = $routeParams.id;
+            $scope.isSmoke = isSmoke;
 
             $scope.loading=true;
             $scope.username = username;
@@ -107,6 +108,9 @@
             };
 
             getResultHistory();
+            $scope.refresh = function() {
+                getResultHistory();
+            };
 
         });
 
