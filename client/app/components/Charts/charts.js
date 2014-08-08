@@ -8,13 +8,6 @@
             var PASS_COLOR = '#18bc9c';
             var FAIL_COLOR = '#e74c3c';
             var ERROR_COLOR = '#F39C12';
-
-			var chart_data = {
-				pass: [],
-				fail: [],
-				error: []
-			};
-            var result_labels = [];	
 		
 			var defaultChartConfig = {
 				//This is not a highcharts object. It just looks a little like one!
@@ -47,16 +40,7 @@
 				//The below properties are watched separately for changes.
 
 				//Series object (optional) - a list of series using normal highcharts series options.
-				series: [{
-					name: "Pass",
-					data: chart_data.pass
-				}, {
-					name: "Fail",
-					data: chart_data.fail
-				}, {
-					name: "Error",
-					data: chart_data.error
-				}, ],
+				series: [],
 				//Title configuration (optional)
 				title: {
 					text: 'Execution Time'
@@ -81,12 +65,12 @@
             return {
                 getExecutionTimeChart: function(result_history, incomingChartConfigs) {
 
-					chart_data = {
-						pass: [],
-						fail: [],
-						error: []
-					};
-					result_labels = [];	
+					var chart_data = {
+							pass: [],
+							fail: [],
+							error: []
+						},
+						result_labels = [];	
 				
 					var chartConfig = angular.copy(defaultChartConfig);
 					
@@ -115,7 +99,19 @@
 					// Populate some of the default chart options with incoming data
 					chartConfig.options.plotOptions.area.marker.enabled = result_history.length === 1 ? true : false;
 					chartConfig.xAxis.categories = result_labels;
-					
+					chartConfig.series = [{
+							name: "Pass",
+							data: chart_data.pass
+						}, 
+						{
+							name: "Fail",
+							data: chart_data.fail
+						}, 
+						{
+							name: "Error",
+							data: chart_data.error
+						}, ];
+						
 					// Override the default chart values with the incomingChartConfigs, if any
 					if (incomingChartConfigs) {
 						angular.extend(chartConfig, incomingChartConfigs);
