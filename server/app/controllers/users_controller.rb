@@ -47,6 +47,22 @@ class UsersController < ApplicationController
 
 	end
 
+=begin
+
+	@api {delete} /users/:name Delete a user
+	@apiName deleteUser
+	@apiGroup Users
+
+	@apiParam {String} name User name
+	@apiDescription Deletes a user and all associated test runs/results
+
+	@apiSuccessExample Sucess Response:
+	HTTP/1.1 200 OK
+
+	@apiErrorExample Error Response:
+	HTTP/1.1 404 NOT FOUND
+
+=end
 	def destroy
 		user = User.find_by(:name => params[:name])
 		if user
@@ -57,6 +73,19 @@ class UsersController < ApplicationController
 		end
 	end
 
+=begin
+	@api {post} /users Create a user
+	@apiName createUser
+	@apiGroup Users
+
+	@apiParam {String} name User name
+	@apiDescription Send the name parameter through form-data or json data
+
+	@apiExample Post body
+	{
+	    "name" : "jerrod"
+	}
+=end
 	def create
 		user = User.new(:name => params[:name])
 

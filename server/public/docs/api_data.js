@@ -133,6 +133,74 @@ define({ api: [
     "filename": "server/app/controllers/users_controller.rb"
   },
   {
+    "type": "post",
+    "url": "/users",
+    "title": "Create a user",
+    "name": "createUser",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "field": "name",
+            "optional": false,
+            "description": "<p>User name</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Send the name parameter through form-data or json data</p>",
+    "examples": [
+      {
+        "title": "Post body",
+        "content": "{\n  \"name\" : \"jerrod\"\n}\n"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "server/app/controllers/users_controller.rb"
+  },
+  {
+    "type": "delete",
+    "url": "/users/:name",
+    "title": "Delete a user",
+    "name": "deleteUser",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "field": "name",
+            "optional": false,
+            "description": "<p>User name</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Deletes a user and all associated test runs/results</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Sucess Response:",
+          "content": "HTTP/1.1 200 OK\n"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error Response:",
+          "content": "HTTP/1.1 404 NOT FOUND\n"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "server/app/controllers/users_controller.rb"
+  },
+  {
     "type": "get",
     "url": "/users/:name",
     "title": "Get an individual user",
