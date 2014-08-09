@@ -4,5 +4,8 @@
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-shell": "~0.7.0"
+  },
+  "scripts" : {
+  	"docs" : "apidoc -i server/ -o server/public/docs"
   }
 }

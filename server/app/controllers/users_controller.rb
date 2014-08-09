@@ -2,10 +2,36 @@ class UsersController < ApplicationController
 
 	protect_from_forgery :except => :create 
 	
+=begin
+	@api {get} /users Get a list of users
+	@apiName GetUsers
+	@apiGroup Users
+
+	@apiSuccess {String} name User name
+	@apiSuccess {String} test_run_count Number of test runs owned by this user
+
+	@apiSuccessExample Success Response:
+	HTTP/1.1 200 OK
+	[{
+	    "name": "Jerrod",
+	    "test_run_count": 5
+	}]
+=end
 	def index 
 		users = User.where.not(:name => "rmauto")
 		render :json => users, :status => :ok
 	end
+
+
+=begin
+	@api {get} /users/:name Get an individual user
+	@apiName getUser
+	@apiGroup Users
+	
+	@apiParam {String} name User name
+
+	@apiDescription This API is deprecated. See GET /users/:name/test_runs
+=end
 
 	#TODO Remove this and just use /user/test_runs
 	#But removing this will break RMTOOLS view junit results button

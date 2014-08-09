@@ -4,6 +4,44 @@ class TestRunsController < ApplicationController
 	protect_from_forgery :except => :destroy
 	rescue_from ActiveRecord::RecordNotFound , :with => :not_found
 
+=begin
+	@api {get} /users/:name/test_runs Get a users test runs
+	@apiName getUserTestRun
+	@apiGroup TestRuns
+	
+	@apiParam {String} name User name
+
+	@apiSuccess {test_run} test_runs An array of the users test runs
+	@apiSuccess {Integer} id Test run id
+	@apiSuccess {String} build_id Name of the build that the test run is based off of
+	@apiSuccess {Boolean} locked If it build is currently being updated or not
+	@apiSuccess {Date} created_at Date that the test run was created
+	@apiSuccess {Integer} pass Number of passes in the test run
+	@apiSuccess {Integer} fail Number of failures in the test run
+	@apiSuccess {Integer} error Number of errors in the test run
+
+	@apiSuccessExample Success Response:
+	HTTP/1.1 200 OK
+	{
+    "test_runs": [
+        {
+            "id": 164,
+            "build_id": "RDNG5.0.2-T20140808_0906",
+            "locked": false,
+            "created_at": "2014-08-08T13:49:09.493Z",
+            "pass": 19,
+            "fail": 0,
+            "error": 0
+        },
+	]
+	}
+
+	@apiErrorExample Error Response:
+	HTTP/1.1 404 NOT FOUND
+	{
+    	"error": "User jerrod not found"
+	}
+=end
 	def index
 		test_runs = User.includes(:test_runs).find_by(:name => params[:user_name]).test_runs
 		render :json => test_runs, :status => :ok, each_serializer: TestRunShortSerializer, :user_name => params[:user_name], :root => "test_runs"
