@@ -2,9 +2,6 @@
     <li>
         <a href="#/smoke-builds">Smoke Builds</a>
     </li>
-    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
-        <loading size="small"></loading>
-    </li>
 </ol>
 <ol class="breadcrumb" ng-if='!isSmoke'>
     <li>
@@ -12,9 +9,6 @@
     </li>
     <li>
         <a href="#/users/{{username}}">{{username}}</a>
-    </li>
-    <li class="active" tooltip="{{date}}" tooltip-placement="right">{{result.build_id}}
-        <loading size="small"></loading>
     </li>
 </ol>
 
@@ -24,15 +18,17 @@
         <small tooltip="{{date}}" tooltip-placement="right"> {{result_history[0].name}} </small>
     </h2>
 </div>
-<div class="text-center">
+<div class="row">
     <loading ng-if="loading"></loading>
-    <highchart id="chart1" config="chartConfig" class="text-center"></highchart>
+    <div class="col-lg-12">
+        <highchart config="chartConfig" class="text-center" ng-if="!loading"></highchart>
+    </div>
 </div>
 <br><br>
 <table ng-if="!loading" class="table table-hover table-striped table-bordered">
 	<tr>
         <th>#</th>
-        <th>Build</th> 
+        <th>Build</th>
     	<th>Time</th>
     	<th style="text-align:center;">Result</th>
     </tr>

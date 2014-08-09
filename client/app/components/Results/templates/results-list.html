@@ -1,6 +1,6 @@
 <loading ng-if="loading"></loading>
 <ul class="list-unstyled" ng-if="!loading">
-    <li ng-repeat="test_run in test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage as results" class="animate-repeat">
+    <li ng-repeat="test_run in test_runs | filter:filterText | startFrom: filterText ? 0 : pagination.page * pagination.perPage | limitTo: pagination.perPage">
         <h4>
             <span ng-if="!test_run.locked">
                 <span class="dropdown" ng-hide="view.editorEnabled">
@@ -29,6 +29,5 @@
             <result-summary></result-summary>
         </h4>
     </li>
-    <li ng-if="!loading && !user.test_runs.length" class="animate-repeat">No builds found</li>
-    <li ng-if="user.test_runs.length && !results.length" class="animate-repeat">No builds match</li>
+    <li ng-if="!loading && !user.test_runs.length">No builds found</li>
 </ul>

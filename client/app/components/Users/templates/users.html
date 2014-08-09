@@ -9,7 +9,7 @@
 <filter></filter>
 
 <ul class="list-unstyled">
-    <li ng-repeat="user in users | filter:filterText" class="animate-repeat">
+    <li ng-repeat="user in users | filter:filterText">
         <h4><a ng-href="#/users/{{user.name}}">{{user.name}}</a>
             <small ng-if="user.test_run_count">
                 <ng-pluralize count="user.test_run_count" when="{

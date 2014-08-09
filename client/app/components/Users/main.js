@@ -9,7 +9,7 @@
         users: 'components/Users/templates/users.html',
         user: 'components/Users/templates/user.html',
         result: 'components/Users/templates/user-result.html',
-        result_history: 'components/Users/templates/user-result-history.html',
+        result_history: 'components/Users/templates/user-result-history.html'
     };
     angular.module('moonunit.users', ['ngRoute', 'moonunit.users.controllers'])
         .config(function($routeProvider) {
