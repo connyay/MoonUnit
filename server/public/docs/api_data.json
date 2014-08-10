@@ -28,8 +28,8 @@
     "description": "<p>Imports a junit report style xml file into a test run</p>",
     "examples": [
       {
-        "title": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
-        "content": "<testsuite errors=\"2\" failures=\"3\" hostname=\"fit-vm8-221\" name=\"com.ibm.rdm.client.api.tests.auto.AllCloudTestsPart1\" tests=\"827\" time=\"4006.873\" timestamp=\"2014-07-07T15:50:32\">\n\t<testcase classname=\"com.ibm.rdm.client.api.tests.compactrender.CommentsCompactRenderingTest\" endTimestamp=\"2014-07-07T16:56:28\" id=\"9accc2af-b8aa-4d7f-bdc8-fc4e7e646b99\" name=\"testCommentCompactRendering\" startTimestamp=\"2014-07-07T16:56:26\" time=\"1.103\" />\n\t<testcase classname=\"com.ibm.rdm.client.api.tests.compactrender.BaselineCompactRenderingTest\" endTimestamp=\"2014-07-07T16:56:31\" id=\"23aebd7a-dc16-4855-a38b-6387b198bdaf\" name=\"testBaselineCompactRendering\" startTimestamp=\"2014-07-07T16:56:28\" time=\"3.349\" />\n</testsuite>\n"
+        "title": "Example:",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<testsuite errors=\"2\" failures=\"3\" hostname=\"fit-vm8-221\" name=\"com.ibm.rdm.client.api.tests.auto.AllCloudTestsPart1\" tests=\"827\" time=\"4006.873\" timestamp=\"2014-07-07T15:50:32\">\n\t<testcase classname=\"com.ibm.rdm.client.api.tests.compactrender.CommentsCompactRenderingTest\" endTimestamp=\"2014-07-07T16:56:28\" id=\"9accc2af-b8aa-4d7f-bdc8-fc4e7e646b99\" name=\"testCommentCompactRendering\" startTimestamp=\"2014-07-07T16:56:26\" time=\"1.103\" />\n\t<testcase classname=\"com.ibm.rdm.client.api.tests.compactrender.BaselineCompactRenderingTest\" endTimestamp=\"2014-07-07T16:56:31\" id=\"23aebd7a-dc16-4855-a38b-6387b198bdaf\" name=\"testBaselineCompactRendering\" startTimestamp=\"2014-07-07T16:56:28\" time=\"3.349\" />\n</testsuite>\n"
       }
     ],
     "success": {
@@ -554,8 +554,8 @@
     "description": "<p>Currently only used for updating the name,</p>",
     "examples": [
       {
-        "title": "\t{",
-        "content": "\"build_id\" : \"updated name\"\n}\n"
+        "title": "Example:",
+        "content": "{\n\"build_id\" : \"updated name\"\n}\n"
       }
     ],
     "success": {

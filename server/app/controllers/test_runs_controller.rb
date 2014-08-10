@@ -118,7 +118,7 @@ class TestRunsController < ApplicationController
 
 	@apiDescription Currently only used for updating the name, 
  
- 	@apiExample
+ 	@apiExample Example:
  	{
 		"build_id" : "updated name"
  	}

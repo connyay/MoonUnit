@@ -14,7 +14,7 @@ class ImportController < ApplicationController
 
 	@apiDescription Imports a junit report style xml file into a test run
 
-	@apiExample
+	@apiExample Example:
 	<?xml version="1.0" encoding="UTF-8" ?>
 	<testsuite errors="2" failures="3" hostname="fit-vm8-221" name="com.ibm.rdm.client.api.tests.auto.AllCloudTestsPart1" tests="827" time="4006.873" timestamp="2014-07-07T15:50:32">
   	<testcase classname="com.ibm.rdm.client.api.tests.compactrender.CommentsCompactRenderingTest" endTimestamp="2014-07-07T16:56:28" id="9accc2af-b8aa-4d7f-bdc8-fc4e7e646b99" name="testCommentCompactRendering" startTimestamp="2014-07-07T16:56:26" time="1.103" />
