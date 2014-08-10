@@ -5,9 +5,9 @@ class TestRunsController < ApplicationController
 	rescue_from ActiveRecord::RecordNotFound , :with => :not_found
 
 =begin
-	@api {get} /users/:name/test_runs Get a users test runs
-	@apiName getUserTestRun
-	@apiGroup TestRuns
+	@api {get} /users/:name/test_runs Get Test Runs
+	@apiName getUsersTestRuns
+	@apiGroup Test Runs
 	
 	@apiParam {String} name User name
 
@@ -39,7 +39,7 @@ class TestRunsController < ApplicationController
 	@apiErrorExample Error Response:
 	HTTP/1.1 404 NOT FOUND
 	{
-    	"error": "User jerrod not found"
+		"error": "User jerrod not found"
 	}
 =end
 	def index
@@ -47,6 +47,56 @@ class TestRunsController < ApplicationController
 		render :json => test_runs, :status => :ok, each_serializer: TestRunShortSerializer, :user_name => params[:user_name], :root => "test_runs"
 	end
 
+=begin
+	@api {get} /users/:name/test_runs/:id Get Test Run
+	@apiName getUsersTestRun
+	@apiGroup Test Runs
+	
+	@apiParam {String} name User name
+	@apiParam {Integer} id Test run id
+
+	@apiDescription Returns a json object representing a single test run, including all test results
+
+	@apiSuccess {String} The name of the build associated with this test run
+	@apiSuccess {Date} created_at The date on which this test run was created
+	@apiSuccess {Integer} id The unique id associated with this test run
+	@apiSuccess {String} url The url for the test run
+	@apiSuccess {Array} test_results An array containing test results
+
+	@apiSuccess {Integer} id The unique id of this test result
+	@apiSuccess {String} result A string containg the result (pass,fail,error)
+	@apiSuccess {Float} time Contains the execution time of the test
+	@apiSuccess {String} package Test package
+	@apiSuccess {String} class_name Test class name
+	@apiSuccess {String} name Test method name
+	@apiSuccess {String} log String containg the stack trace (can be null)
+ 
+	@apiSuccessExample Success Response:
+	HTTP/1.1 200 OK
+	{
+    "build_id": "test2",
+    "created_at": "2014-08-06T19:39:00.590Z",
+    "id": 13,
+    "url": "http://localhost:3000/users/jllankford/test_runs/13",
+    "test_results": [
+        {
+            "id": 10959,
+            "result": "pass",
+            "time": 6.329,
+            "package": "com.ibm.rdm.client.api.tests.importer",
+            "class_name": "ExportServiceTest",
+            "name": "testExportThenImport",
+            "log": null
+        },
+    ]
+    }
+
+	@apiErrorExample Error Response:
+	HTTP/1.1 404 NOT FOUND
+	{
+		"error": "Resource not found"
+	}
+=end
 	def show
 		#Category.includes(posts: [{ comments: :guest }, :tags]).find(1)
 		test_run = Rails.cache.fetch "test-run-#{params[:id]}" do
@@ -58,6 +108,32 @@ class TestRunsController < ApplicationController
 		end
 	end
 
+=begin
+	@api {put} /users/:name/test_runs/:id Update Test Run
+	@apiName updateUsersTestRun
+	@apiGroup Test Runs
+	
+	@apiParam {String} name User name
+	@apiParam {Integer} id Test run id
+
+	@apiDescription Currently only used for updating the name, 
+ 
+ 	@apiExample
+ 	{
+		"build_id" : "updated name"
+ 	}
+
+	@apiSuccessExample Success Response:
+	HTTP/1.1 200 OK
+
+	@apiErrorExample Error Response:
+	HTTP/1.1 404 NOT FOUND
+	{
+    	"errors": [
+        	"Build can't be blank"
+    	]
+	}
+=end
 	def update
 		test_run = TestRun.find(params[:id])
 		if test_run.update(:build_id => params[:build_id])
@@ -69,6 +145,25 @@ class TestRunsController < ApplicationController
 
 	end
 
+=begin
+	@api {delete} /users/:name/test_runs/:id Delete Test Run
+	@apiName deleteUsersTestRun
+	@apiGroup Test Runs
+	
+	@apiParam {String} name User name
+	@apiParam {Integer} id Test run id
+
+	@apiDescription Delete the specified test run and all associated test results
+
+	@apiSuccessExample Success Response:
+	HTTP/1.1 200 OK
+
+	@apiErrorExample Error Response:
+	HTTP/1.1 404 NOT FOUND
+	{
+		"error": "Resource not found"
+	}
+=end
 	def destroy 
 		test_run = TestRun.find(params[:id]).destroy
 		Rails.cache.delete "test-run-#{params[:id]}"

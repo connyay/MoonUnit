@@ -85,6 +85,10 @@ class UsersController < ApplicationController
 	{
 	    "name" : "jerrod"
 	}
+
+	@apiSuccessExample Sucess Response:
+	HTTP/1.1 201 CREATED
+
 =end
 	def create
 		user = User.new(:name => params[:name])
