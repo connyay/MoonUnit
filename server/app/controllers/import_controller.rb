@@ -2,7 +2,7 @@ require 'ImportTask'
 
 class ImportController < ApplicationController
 
-	protect_from_forgery :except => :create 
+	protect_from_forgery :except => :create
 
 =begin
 	@api {post} /users/:name/import?build_id=... Import Test Run
@@ -39,7 +39,7 @@ class ImportController < ApplicationController
 			task_params[:raw_xml] = request.body.read
 		end
 
-		ImportTask.new(task_params).run
+		ImportTask.new(task_params).delay.run
 
 		head :accepted
 	end

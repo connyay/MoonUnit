@@ -42,29 +42,17 @@ MoonUnit::Application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :error
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
+  config.logger = Logger.new(STDOUT)
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-
-  #We deploy to staging with this production config, and there is no memcache service on the staging environment
-  obj = JSON.parse( ENV['VCAP_SERVICES'] )['memcachedcloud']
-  if obj
-    credentials = obj.first['credentials']
-    config.cache_store = :dalli_store, credentials['servers'], {
-      :username => credentials['username'],
-      :password => credentials['password'],
-      :compress => true
-    }
-  else
-    Logger.new(STDOUT).warn("Memcahcedcloud credentials not found. Using default memory cache")
-  end
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"
@@ -91,9 +79,5 @@ MoonUnit::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Do not dump schema after migrations.
-  #config.active_record.dump_schema_after_migration = false
-
-  # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  config.active_record.dump_schema_after_migration = false
 end

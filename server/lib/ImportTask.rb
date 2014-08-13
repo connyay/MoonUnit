@@ -16,15 +16,13 @@ class ImportTask
 		build_id = @task_params[:build_id]
 		location = @task_params[:location]
 
-		Spawnling.new do
-			t1 = Time.now.to_f
-			if location
-				importFromUrl(user,location,build_id)
-			else
-				import(user,raw_xml,build_id)
-			end
-			Rails.logger.info("Import took #{Time.now.to_f-t1}s")
+		t1 = Time.now.to_f
+		if location
+			importFromUrl(user,location,build_id)
+		else
+			import(user,raw_xml,build_id)
 		end
+		Rails.logger.info("Import took #{Time.now.to_f-t1}s")
 	end
 
 	private
@@ -35,7 +33,7 @@ class ImportTask
 		begin
 			#XML parsing code
 			doc = Nokogiri::XML(raw_xml)
-			
+
 			#Get the build id from three places. Url params, xml property, or last resort generate one
 			if build_id.nil?
 				build_selector = doc.css("property[name='latestGoodBuild']")[0]
